@@ -2,10 +2,10 @@
 
 ## Team Members:
 
-* 
-* 
-* 
-* 
+* Ran
+* Andrew
+* Jason
+* Carl
 
 ## User stories
 
