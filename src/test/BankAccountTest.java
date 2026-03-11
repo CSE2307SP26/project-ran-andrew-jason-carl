@@ -26,4 +26,15 @@ public class BankAccountTest {
             //do nothing, test passes
         }
     }
+
+    @Test
+    public void testTransactionHistory() {
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(50);
+        testAccount.deposit(25);
+        assertEquals("Deposit: 50.0\nDeposit: 25.0\n", testAccount.getTransactionHistory());
+
+        BankAccount account2 = new BankAccount();
+        assertEquals("", account2.getTransactionHistory());
+    }
 }
