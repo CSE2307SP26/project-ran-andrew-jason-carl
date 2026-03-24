@@ -27,6 +27,9 @@ public class BankAccount {
     }
 
     public String getTransactionHistory() {
+        if(this.transactionHistory.isEmpty()) {
+            return "There are no transactions yet.\n\n";
+        }
         StringBuilder history = new StringBuilder();
         for(String transaction : this.transactionHistory) {
             history.append(transaction).append("\n");

@@ -41,12 +41,14 @@ public class BankAccountTest {
         testAccount.deposit(25);
         assertEquals("Deposit: 50.0\nDeposit: 25.0\n", testAccount.getTransactionHistory());
 
-        BankAccount account2 = new BankAccount();
-        assertEquals("", account2.getTransactionHistory());
-
         BankAccount account3 = new BankAccount();
         account3.deposit(100);
         account3.deposit(200);
         assertEquals("Deposit: 100.0\nDeposit: 200.0\n", account3.getTransactionHistory());
+        
+
+        // test empty account 
+        BankAccount account4 = new BankAccount();
+        assertEquals("There are no transactions yet.\n\n", account4.getTransactionHistory());
     }
 }
