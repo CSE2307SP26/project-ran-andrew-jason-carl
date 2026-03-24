@@ -7,11 +7,15 @@ public class MainMenu {
     private static final int EXIT_SELECTION = 3;
 	private static final int MAX_SELECTION = 3;
 
-	private BankAccount userAccount;
+	private Customer user;
     private Scanner keyboardInput;
 
     public MainMenu() {
-        this.userAccount = new BankAccount();
+        this.user = new Customer("default");
+
+        // make a new account for the customer 
+        this.user.addAccount(new BankAccount());
+
         this.keyboardInput = new Scanner(System.in);
     }
 
@@ -48,7 +52,7 @@ public class MainMenu {
             System.out.print("How much would you like to deposit: ");
             depositAmount = keyboardInput.nextInt();
         }
-        userAccount.deposit(depositAmount);
+        user.getAccounts().get(0).deposit(depositAmount); // deposit it into the first account only for now.
     }
 
     public void performCloseAccount() {
