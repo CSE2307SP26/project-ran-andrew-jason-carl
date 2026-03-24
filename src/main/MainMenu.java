@@ -4,8 +4,8 @@ import java.util.Scanner;
 
 public class MainMenu {
 
-    private static final int EXIT_SELECTION = 2;
-	private static final int MAX_SELECTION = 2;
+    private static final int EXIT_SELECTION = 3;
+	private static final int MAX_SELECTION = 3;
 
 	private BankAccount userAccount;
     private Scanner keyboardInput;
@@ -19,6 +19,7 @@ public class MainMenu {
         System.out.println("Welcome to the 237 Bank App!");
         
         System.out.println("1. Make a deposit");
+        System.out.println("2. Close Account");
         System.out.println("2. Exit the app");
 
     }
@@ -36,6 +37,8 @@ public class MainMenu {
         switch (selection) {
             case 1:
                 performDeposit();
+            case 2:
+                performCloseAccount();
         }
     }
 
@@ -46,6 +49,14 @@ public class MainMenu {
             depositAmount = keyboardInput.nextInt();
         }
         userAccount.deposit(depositAmount);
+    }
+
+    public void performCloseAccount() {
+        if(userAccount.closeAccount()){
+            System.out.println("Account closed successfully.");
+        } else {
+            System.out.println("Account could not be closed. Please make sure your balance is 0.");
+        }
     }
 
     public void run() {
