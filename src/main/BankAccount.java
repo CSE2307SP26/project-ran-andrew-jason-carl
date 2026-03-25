@@ -19,4 +19,23 @@ public class BankAccount {
     public double getBalance() {
         return this.balance;
     }
+
+    public void transferTo(BankAccount to, double amount){
+        if(to == null){
+            throw new IllegalArgumentException();
+        }
+        if (this == to) {
+            throw new IllegalArgumentException();
+        }
+        double fromAmount = this.balance;
+        if(fromAmount >= amount && amount > 0){
+            this.balance -= amount;
+            to.balance += amount;
+        }
+        else{
+            throw new IllegalArgumentException();
+        }
+
+        
+    }
 }
