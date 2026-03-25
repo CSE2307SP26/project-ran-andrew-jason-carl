@@ -9,7 +9,7 @@ public class Admin extends User {
     }
 
     public void collectFee(BankAccount account, double fee) {
-        
+        account.withdraw(fee);
     }
 
     public void addInterest(BankAccount account, double rate) {
