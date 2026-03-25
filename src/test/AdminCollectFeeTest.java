@@ -18,7 +18,7 @@ public class AdminCollectFeeTest {
 
     @BeforeEach
     public void setUp() {
-        admin = new Admin("admin_test", "adminpass", "ADM001");
+        admin = new Admin("admin_test", "1");
         account = new BankAccount();
     }
 
