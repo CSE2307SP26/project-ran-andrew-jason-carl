@@ -4,8 +4,8 @@ import java.util.Scanner;
 
 public class MainMenu {
 
-    private static final int EXIT_SELECTION = 2;
-	private static final int MAX_SELECTION = 2;
+    private static final int EXIT_SELECTION = 4;
+	private static final int MAX_SELECTION = 4;
 
 	private Customer user;
     private Scanner keyboardInput;
@@ -23,8 +23,10 @@ public class MainMenu {
         System.out.println("Welcome to the 237 Bank App!");
         
         System.out.println("1. Make a deposit");
-        System.out.println("2. Exit the app");
-
+        System.out.println("2. View account balance");
+        System.out.println("3. Create a new account");
+        System.out.println("4. Exit the app");
+        
     }
 
     public int getUserSelection(int max) {
@@ -40,6 +42,13 @@ public class MainMenu {
         switch (selection) {
             case 1:
                 performDeposit();
+                break;
+            case 2:
+                performCheckBalance();
+                break;
+           case 3:
+                performCreateAccount();
+                break;                
         }
     }
 
@@ -52,6 +61,10 @@ public class MainMenu {
         user.getAccounts().get(0).deposit(depositAmount); // deposit it into the first account only for now.
     }
 
+    public void performCheckBalance() {
+        System.out.println("Your current balance is: $ " + user.getAccounts().get(0).getBalance());
+    }   
+
     public void run() {
         int selection = -1;
         while(selection != EXIT_SELECTION) {
@@ -59,6 +72,13 @@ public class MainMenu {
             selection = getUserSelection(MAX_SELECTION);
             processInput(selection);
         }
+    }
+
+    public void performCreateAccount(){
+        System.out.println("Enter name for the new account");
+        String accountName = keyboardInput.next();
+        user.addAccount(new BankAccount(accountName));
+        System.out.println("New account created with the name: " + accountName);
     }
 
     public static void main(String[] args) {
