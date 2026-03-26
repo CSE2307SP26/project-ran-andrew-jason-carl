@@ -26,6 +26,20 @@ public class BankAccountTest {
             //do nothing, test passes
         }
     }
+
+    @Test 
+    public void testCloseAccount() {
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(50);
+        assertEquals(false, testAccount.closeAccount());
+        
+        BankAccount account2 = new BankAccount();
+        assertEquals(true, account2.closeAccount());
+
+        // test closed account 
+        assertEquals(0.0, account2.getBalance(), 0.01);
+    }
+    
     //test transferTo works successfully
     @Test
     public void testTransferTo() {

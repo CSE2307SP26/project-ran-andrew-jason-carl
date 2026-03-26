@@ -4,8 +4,8 @@ import java.util.Scanner;
 
 public class MainMenu {
 
-    private static final int EXIT_SELECTION = 2;
-	private static final int MAX_SELECTION = 2;
+    private static final int EXIT_SELECTION = 3;
+	private static final int MAX_SELECTION = 3;
 
 	private Customer user;
     private Scanner keyboardInput;
@@ -27,7 +27,8 @@ public class MainMenu {
         System.out.println("1. Make a deposit");
         System.out.println("2. Make a transfer");
         System.out.println("3. Make a withdraw");
-        System.out.println("4. Exit the app");
+        System.out.println("4. Close account");
+        System.out.println("5. Exit the app");
 
     }
 
@@ -44,10 +45,16 @@ public class MainMenu {
         switch (selection) {
             case 1:
                 performDeposit();
+                break;
             case 2:
                 performTransfer();
+                break;
             case 3:
                 performWithdraw();
+                break;
+            case 4:
+                performCloseAccount();
+                break;
         }
     }
 
@@ -59,6 +66,7 @@ public class MainMenu {
         }
         user.getAccounts().get(0).deposit(depositAmount); // deposit it into the first account only for now.
     }
+
     public void performWithdraw() {
         double withdrawAmount = -1;
         while(withdrawAmount < 0 || withdrawAmount>user.getAccounts().get(0).getBalance()) {
@@ -77,6 +85,14 @@ public class MainMenu {
         user.getAccounts().get(0).transferTo(user.getAccounts().get(1),transferAmount);
     }
 
+    public void performCloseAccount() {
+        if(user.getAccounts().get(0).closeAccount()){
+            System.out.println("Account closed successfully.");
+        } else {
+            System.out.println("Account could not be closed. Please make sure your balance is 0.");
+        }
+    }
+
     public void run() {
         int selection = -1;
         while(selection != EXIT_SELECTION) {
@@ -90,5 +106,4 @@ public class MainMenu {
         MainMenu bankApp = new MainMenu();
         bankApp.run();
     }
-
 }
