@@ -45,12 +45,16 @@ public class MainMenu {
         switch (selection) {
             case 1:
                 performDeposit();
+                break;
             case 2:
                 performTransfer();
+                break;
             case 3:
                 performWithdraw();
+                break;
             case 4:
                 performCloseAccount();
+                break;
         }
     }
 
@@ -62,6 +66,7 @@ public class MainMenu {
         }
         user.getAccounts().get(0).deposit(depositAmount); // deposit it into the first account only for now.
     }
+
     public void performWithdraw() {
         double withdrawAmount = -1;
         while(withdrawAmount < 0 || withdrawAmount>user.getAccounts().get(0).getBalance()) {
@@ -101,5 +106,4 @@ public class MainMenu {
         MainMenu bankApp = new MainMenu();
         bankApp.run();
     }
-
 }
