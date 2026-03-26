@@ -15,9 +15,7 @@ public class MainMenu {
 
         // make a new account for the customer 
         this.user.addAccount(new BankAccount());
-        //create second account for transfer.
-        this.user.addAccount(new BankAccount());
-
+        
         this.keyboardInput = new Scanner(System.in);
     }
 
@@ -42,7 +40,7 @@ public class MainMenu {
         return selection;
     }
 
-public void processInput(int selection) {
+    public void processInput(int selection) {
         switch (selection) {
             case 1:
                 performDeposit();
@@ -72,11 +70,15 @@ public void processInput(int selection) {
             System.out.print("How much would you like to deposit: ");
             depositAmount = keyboardInput.nextInt();
         }
-        user.getAccounts().get(0).deposit(depositAmount); // deposit it into the first account only for now.
+
+        int account = selectAccount();
+
+        user.getAccounts().get(account).deposit(depositAmount);
     }
 
     public void performCheckBalance() {
-        System.out.println("Your current balance is: $ " + user.getAccounts().get(0).getBalance());
+        int account = selectAccount();
+        System.out.println("Your current balance is: $ " + user.getAccounts().get(account).getBalance());
     }   
 
     public void performCreateAccount(){
@@ -92,7 +94,8 @@ public void processInput(int selection) {
             System.out.print("How much would you like to withdraw: ");
             withdrawAmount = keyboardInput.nextInt();
         }
-        user.getAccounts().get(0).withdraw(withdrawAmount); // withdraw it from the first account only for now.
+        int account = selectAccount();
+        user.getAccounts().get(account).withdraw(withdrawAmount); // withdraw it from the selected account only for now.
     }
 
     public void performTransfer() {
@@ -101,19 +104,39 @@ public void processInput(int selection) {
             System.out.print("How much would you like to transfer: ");
             transferAmount = keyboardInput.nextInt();
         }
-        user.getAccounts().get(0).transferTo(user.getAccounts().get(1),transferAmount);
+        int fromAccount = selectAccount();
+        int toAccount = selectAccount();
+        user.getAccounts().get(fromAccount).transferTo(user.getAccounts().get(toAccount), transferAmount);
     }
 
     public void performViewTransactionHistory() {
-        System.out.println(user.getAccounts().get(0).getTransactionHistory());
+        int account = selectAccount();
+        System.out.println(user.getAccounts().get(account).getTransactionHistory());
     }
   
     public void performCloseAccount() {
-        if(user.getAccounts().get(0).closeAccount()){
+        int account = selectAccount();
+        if(user.getAccounts().get(account).closeAccount()){
             System.out.println("Account closed successfully.");
         } else {
             System.out.println("Account could not be closed. Please make sure your balance is 0.");
         }
+    }
+
+    private int selectAccount() {
+        System.out.println("Select an account:");
+
+        for(int i = 0; i < user.getAccounts().size(); i++) {
+            System.out.println((i + 1) + ". " + user.getAccounts().get(i).getAccountName());
+        }
+
+        int accountSelection = -1;
+        while(accountSelection < 1 || accountSelection > user.getAccounts().size()) {
+            System.out.print("Please select an account: ");
+            accountSelection = keyboardInput.nextInt();
+        }
+
+        return accountSelection - 1;
     }
 
     public void run() {
