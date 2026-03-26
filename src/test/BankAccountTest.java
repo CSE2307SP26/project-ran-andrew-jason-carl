@@ -51,6 +51,20 @@ public class BankAccountTest {
         BankAccount account4 = new BankAccount();
         assertEquals("There are no transactions yet.\n\n", account4.getTransactionHistory());
     }
+
+    @Test 
+    public void testCloseAccount() {
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(50);
+        assertEquals(false, testAccount.closeAccount());
+        
+        BankAccount account2 = new BankAccount();
+        assertEquals(true, account2.closeAccount());
+
+        // test closed account 
+        assertEquals(0.0, account2.getBalance(), 0.01);
+    }
+    
     //test transferTo works successfully
     @Test
     public void testTransferTo() {

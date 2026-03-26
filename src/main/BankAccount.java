@@ -6,12 +6,19 @@ public class BankAccount {
 
     private double balance;
     private ArrayList<String> transactionHistory = new ArrayList<>();
+    private boolean accountClosed;
 
     public BankAccount() {
         this.balance = 0;
+        this.accountClosed = false;
     }
 
     public void deposit(double amount) {
+        if(accountClosed) {
+            System.out.println("Account is closed. No transactions can be made.");
+            return;
+        }
+
         if(amount > 0) {
             this.balance += amount;
             
@@ -23,6 +30,11 @@ public class BankAccount {
     }
 
     public double getBalance() {
+        if(accountClosed) {
+            System.out.println("Account is closed. No transactions can be made.");
+            return 0;
+        }
+
         return this.balance;
     }
 
@@ -36,6 +48,19 @@ public class BankAccount {
         }
         return history.toString();
     }
+  
+    // close account 
+    public boolean closeAccount() {
+        if(this.balance == 0) {
+            balance = 0;
+            accountClosed = true;
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
     public void transferTo(BankAccount to, double amount){
         if(to == null){
             throw new IllegalArgumentException();

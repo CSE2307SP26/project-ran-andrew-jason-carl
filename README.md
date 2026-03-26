@@ -14,7 +14,7 @@
 3. A bank customer should be able to check their account balance. 
 4. A bank customer should be able to view their transaction history for an account. (Carl)
 5. A bank customer should be able to create an additional account with the bank. 
-6. A bank customer should be able to close an existing account.
+6. A bank customer should be able to close an existing account. (Carl)
 7. A bank customer should be able to transfer money from one account to another. 
 8. A bank adminstrator should be able to collect fees from existing accounts when necessary.
 9. A bank adminstrator should be able to add an interest payment to an existing account when necessary.
