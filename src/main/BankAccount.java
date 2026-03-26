@@ -62,6 +62,11 @@ public class BankAccount {
     }
     
     public void transferTo(BankAccount to, double amount){
+        if(accountClosed) {
+            System.out.println("Account is closed. No transactions can be made.");
+            return;
+        }
+
         if(to == null){
             throw new IllegalArgumentException();
         }
@@ -72,6 +77,8 @@ public class BankAccount {
         if(fromAmount >= amount && amount > 0){
             this.balance -= amount;
             to.balance += amount;
+            this.transactionHistory.add("Transfer to account " + to + ": " + amount);
+            to.transactionHistory.add("Transfer from account " + this + ": " + amount);
         }
         else{
           throw new IllegalArgumentException();
@@ -80,9 +87,15 @@ public class BankAccount {
    
     public void withdraw(double amount){
         double curr = this.balance;
+
+        if(accountClosed) {
+            System.out.println("Account is closed. No transactions can be made.");
+            return;
+        }
         
         if(amount > 0 && amount <= curr){
             this.balance -= amount;
+            this.transactionHistory.add("Withdrawal: " + amount);
         }
         else{
             throw new IllegalArgumentException();

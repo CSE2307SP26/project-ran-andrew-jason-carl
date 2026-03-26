@@ -4,8 +4,8 @@ import java.util.Scanner;
 
 public class MainMenu {
 
-    private static final int EXIT_SELECTION = 3;
-	private static final int MAX_SELECTION = 3;
+    private static final int EXIT_SELECTION = 6;
+	private static final int MAX_SELECTION = 6;
 
 	private Customer user;
     private Scanner keyboardInput;
@@ -90,7 +90,7 @@ public class MainMenu {
     }
 
     public void performViewTransactionHistory() {
-        System.out.println(userAccount.getTransactionHistory());
+        System.out.println(user.getAccounts().get(0).getTransactionHistory());
     }
   
     public void performCloseAccount() {
