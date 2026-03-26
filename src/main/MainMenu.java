@@ -26,7 +26,7 @@ public class MainMenu {
         
         System.out.println("1. Make a deposit");
         System.out.println("2. Make a transfer");
-        System.out.println("3. Make a withdraw")
+        System.out.println("3. Make a withdraw");
         System.out.println("4. Exit the app");
 
     }

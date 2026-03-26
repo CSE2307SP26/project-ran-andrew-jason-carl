@@ -104,6 +104,7 @@ public class BankAccountTest {
         testAccount.withdraw(30);
         assertEquals(20, testAccount.getBalance(), 0.01);
     }
+    
     //test if it catches negative withdraw
     @Test
     public void testInvalidWithdraw_one(){
