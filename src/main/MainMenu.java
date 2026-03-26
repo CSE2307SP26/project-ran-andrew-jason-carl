@@ -43,6 +43,8 @@ public class MainMenu {
         switch (selection) {
             case 1:
                 performDeposit();
+            case 2:
+                performTransfer();
         }
     }
 
