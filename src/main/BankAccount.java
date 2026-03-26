@@ -43,4 +43,32 @@ public class BankAccount {
             return false;
         }
     }
+    
+    public void transferTo(BankAccount to, double amount){
+        if(to == null){
+            throw new IllegalArgumentException();
+        }
+        if (this == to) {
+            throw new IllegalArgumentException();
+        }
+        double fromAmount = this.balance;
+        if(fromAmount >= amount && amount > 0){
+            this.balance -= amount;
+            to.balance += amount;
+        }
+        else{
+          throw new IllegalArgumentException();
+        }
+    }
+   
+    public void withdraw(double amount){
+        double curr = this.balance;
+        
+        if(amount > 0 && amount <= curr){
+            this.balance -= amount;
+        }
+        else{
+            throw new IllegalArgumentException();
+        }
+    }
 }
