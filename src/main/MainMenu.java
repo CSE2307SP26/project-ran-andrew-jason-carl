@@ -27,8 +27,9 @@ public class MainMenu {
         System.out.println("1. Make a deposit");
         System.out.println("2. Make a transfer");
         System.out.println("3. Make a withdraw");
-        System.out.println("4. Close account");
-        System.out.println("5. Exit the app");
+        System.out.println("4. View transaction history");
+        System.out.println("5. Close account");
+        System.out.println("6. Exit the app");
 
     }
 
@@ -53,8 +54,11 @@ public class MainMenu {
                 performWithdraw();
                 break;
             case 4:
-                performCloseAccount();
+                performViewTransactionHistory();
                 break;
+            case 5:    
+              performCloseAccount();
+              break;
         }
     }
 
@@ -85,6 +89,10 @@ public class MainMenu {
         user.getAccounts().get(0).transferTo(user.getAccounts().get(1),transferAmount);
     }
 
+    public void performViewTransactionHistory() {
+        System.out.println(userAccount.getTransactionHistory());
+    }
+  
     public void performCloseAccount() {
         if(user.getAccounts().get(0).closeAccount()){
             System.out.println("Account closed successfully.");

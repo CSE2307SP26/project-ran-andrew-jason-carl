@@ -1,8 +1,11 @@
 package main;
 
+import java.util.ArrayList;
+
 public class BankAccount {
 
     private double balance;
+    private ArrayList<String> transactionHistory = new ArrayList<>();
     private boolean accountClosed;
 
     public BankAccount() {
@@ -18,6 +21,9 @@ public class BankAccount {
 
         if(amount > 0) {
             this.balance += amount;
+            
+            // add transaction to history 
+            this.transactionHistory.add("Deposit: " + amount);
         } else {
             throw new IllegalArgumentException();
         }
@@ -32,6 +38,17 @@ public class BankAccount {
         return this.balance;
     }
 
+    public String getTransactionHistory() {
+        if(this.transactionHistory.isEmpty()) {
+            return "There are no transactions yet.\n\n";
+        }
+        StringBuilder history = new StringBuilder();
+        for(String transaction : this.transactionHistory) {
+            history.append(transaction).append("\n");
+        }
+        return history.toString();
+    }
+  
     // close account 
     public boolean closeAccount() {
         if(this.balance == 0) {

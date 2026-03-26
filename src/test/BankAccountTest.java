@@ -25,6 +25,31 @@ public class BankAccountTest {
         } catch (IllegalArgumentException e) {
             //do nothing, test passes
         }
+
+        try {
+            testAccount.deposit(0);
+            fail();
+        } catch (IllegalArgumentException e) {
+            //do nothing, test passes
+        }
+    }
+
+    @Test
+    public void testTransactionHistory() {
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(50);
+        testAccount.deposit(25);
+        assertEquals("Deposit: 50.0\nDeposit: 25.0\n", testAccount.getTransactionHistory());
+
+        BankAccount account3 = new BankAccount();
+        account3.deposit(100);
+        account3.deposit(200);
+        assertEquals("Deposit: 100.0\nDeposit: 200.0\n", account3.getTransactionHistory());
+        
+
+        // test empty account 
+        BankAccount account4 = new BankAccount();
+        assertEquals("There are no transactions yet.\n\n", account4.getTransactionHistory());
     }
 
     @Test 

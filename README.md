@@ -12,7 +12,7 @@
 1. A bank customer should be able to deposit into an existing account. (Shook)
 2. A bank customer should be able to withdraw from an account. 
 3. A bank customer should be able to check their account balance. 
-4. A bank customer should be able to view their transaction history for an account. 
+4. A bank customer should be able to view their transaction history for an account. (Carl)
 5. A bank customer should be able to create an additional account with the bank. 
 6. A bank customer should be able to close an existing account. (Carl)
 7. A bank customer should be able to transfer money from one account to another. 
