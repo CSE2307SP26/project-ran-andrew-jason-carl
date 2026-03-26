@@ -15,6 +15,8 @@ public class MainMenu {
 
         // make a new account for the customer 
         this.user.addAccount(new BankAccount());
+        //create second account for transfer.
+        this.user.addAccount(new BankAccount());
 
         this.keyboardInput = new Scanner(System.in);
     }
@@ -23,8 +25,9 @@ public class MainMenu {
         System.out.println("Welcome to the 237 Bank App!");
         
         System.out.println("1. Make a deposit");
-        System.out.println("2. Make a withdraw")
-        System.out.println("3. Exit the app");
+        System.out.println("2. Make a transfer");
+        System.out.println("3. Make a withdraw")
+        System.out.println("4. Exit the app");
 
     }
 
@@ -42,6 +45,8 @@ public class MainMenu {
             case 1:
                 performDeposit();
             case 2:
+                performTransfer();
+            case 3:
                 performWithdraw();
         }
     }
@@ -61,6 +66,15 @@ public class MainMenu {
             withdrawAmount = keyboardInput.nextInt();
         }
         user.getAccounts().get(0).withdraw(withdrawAmount); // withdraw it from the first account only for now.
+    }
+
+    public void performTransfer() {
+        double transferAmount = -1;
+        while(transferAmount < 0 || transferAmount > user.getAccounts().get(0).getBalance()) {
+            System.out.print("How much would you like to transfer: ");
+            transferAmount = keyboardInput.nextInt();
+        }
+        user.getAccounts().get(0).transferTo(user.getAccounts().get(1),transferAmount);
     }
 
     public void run() {
