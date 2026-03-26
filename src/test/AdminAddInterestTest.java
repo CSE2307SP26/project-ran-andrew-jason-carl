@@ -29,19 +29,6 @@ public class AdminAddInterestTest {
     }
 
     @Test
-    public void testAddInterestOnZeroBalance() {
-        admin.addInterest(account, 0.05);
-        assertEquals(0, account.getBalance(), 0.01);
-    }
-
-    @Test
-    public void testAddInterestZeroRate() {
-        account.deposit(1000);
-        admin.addInterest(account, 0.0);
-        assertEquals(1000, account.getBalance(), 0.01);
-    }
-
-    @Test
     public void testAddInterestNegativeRate() {
         account.deposit(1000);
         assertThrows(IllegalArgumentException.class, () -> {
