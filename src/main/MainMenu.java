@@ -15,6 +15,8 @@ public class MainMenu {
 
         // make a new account for the customer 
         this.user.addAccount(new BankAccount());
+        //create second account for transfer.
+        this.user.addAccount(new BankAccount());
 
         this.keyboardInput = new Scanner(System.in);
     }
@@ -23,8 +25,11 @@ public class MainMenu {
         System.out.println("Welcome to the 237 Bank App!");
         
         System.out.println("1. Make a deposit");
-        System.out.println("2. View transaction history");
-        System.out.println("3. Exit the app");
+        System.out.println("2. Make a transfer");
+        System.out.println("3. Make a withdraw");
+        System.out.println("4. View transaction history");
+        System.out.println("5. Exit the app");
+
     }
 
     public int getUserSelection(int max) {
@@ -40,8 +45,16 @@ public class MainMenu {
         switch (selection) {
             case 1:
                 performDeposit();
+                break;
             case 2:
+                performTransfer();
+                break;
+            case 3:
+                performWithdraw();
+                break;
+            case 4:
                 performViewTransactionHistory();
+                break;
         }
     }
 
@@ -52,6 +65,23 @@ public class MainMenu {
             depositAmount = keyboardInput.nextInt();
         }
         user.getAccounts().get(0).deposit(depositAmount); // deposit it into the first account only for now.
+    }
+    public void performWithdraw() {
+        double withdrawAmount = -1;
+        while(withdrawAmount < 0 || withdrawAmount>user.getAccounts().get(0).getBalance()) {
+            System.out.print("How much would you like to withdraw: ");
+            withdrawAmount = keyboardInput.nextInt();
+        }
+        user.getAccounts().get(0).withdraw(withdrawAmount); // withdraw it from the first account only for now.
+    }
+
+    public void performTransfer() {
+        double transferAmount = -1;
+        while(transferAmount < 0 || transferAmount > user.getAccounts().get(0).getBalance()) {
+            System.out.print("How much would you like to transfer: ");
+            transferAmount = keyboardInput.nextInt();
+        }
+        user.getAccounts().get(0).transferTo(user.getAccounts().get(1),transferAmount);
     }
 
     public void performViewTransactionHistory() {
