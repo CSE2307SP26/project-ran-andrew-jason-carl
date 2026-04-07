@@ -82,8 +82,8 @@ public class BankAccount {
         if(fromAmount >= amount && amount > 0){
             this.balance -= amount;
             to.balance += amount;
-            this.transactionHistory.add("Transfer to account " + to + ": " + amount);
-            to.transactionHistory.add("Transfer from account " + this + ": " + amount);
+            this.transactionHistory.add("Transfer to account " + to.getAccountName() + ": " + amount);
+            to.transactionHistory.add("Transfer from account " + this.getAccountName() + ": " + amount);
         } else {
             throw new IllegalArgumentException();
         }
