@@ -19,23 +19,18 @@
 8. A bank adminstrator should be able to collect fees from existing accounts when necessary.
 9. A bank adminstrator should be able to add an interest payment to an existing account when necessary.
 
+-- new since apr 7--
+
+10. Users should be able to add password to their accounts and change passwords
+11. Users should be able to switch user accounts to log in depending on what type of user they are (regular user, bank admin)
+
+
 # User stories completed this iteration
-1. A bank customer should be able to deposit into an existing account.
-2. A bank customer should be able to withdraw from an account. 
-3. A bank customer should be able to check their account balance. 
-4. A bank customer should be able to view their transaction history for an account.
-5. A bank customer should be able to create an additional account with the bank. 
-6. A bank customer should be able to close an existing account.
-7. A bank customer should be able to transfer money from one account to another. 
-8. A bank adminstrator should be able to collect fees from existing accounts when necessary.
-9. A bank adminstrator should be able to add an interest payment to an existing account when necessary.
+1. Users should be able to add password to their accounts and change passwords
+2. Users should be able to switch user accounts to log in depending on what type of user they are (regular user, bank admin)
 
 # User stories we intend to complete next iteration 
-1. Bank customer should be able to secure their account with a password of some sorts
-2. Bank customer should be able to switch accounts with passwords 
-3. Bank customer should be able to switch between admin/regular user 
-4. A bank adminstrator should be able to collect fees from existing accounts when necessary. (to make it visible in the main menu)
-5. A bank adminstrator should be able to add an interest payment to an existing account when necessary. (to make it visible in the main menu)
+N/A for now apr 7. 
 
 # Is there anything that you implemented but doesn't currently work? 
 None that we know of. 

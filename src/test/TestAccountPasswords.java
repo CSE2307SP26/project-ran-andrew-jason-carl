@@ -4,8 +4,6 @@ import main.Customer;
 
 import org.junit.Test;
 
-import main.BankAccount;
-
 public class TestAccountPasswords {
     @Test
     public void testHashPassword() {

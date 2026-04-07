@@ -33,6 +33,7 @@ public class MainMenu {
         isLoggedIn = false;
     }
 
+    // this is the method that displays the dashboard for the login page 
     public void displayAccountOptions() {
         System.out.println("Welcome to the 237 Bank App!");
 
@@ -41,6 +42,7 @@ public class MainMenu {
         System.out.println("3. Exit the app");
     }
 
+    // the original dashboard to be displayed once the user logs in 
     public void displayOptions() {
         System.out.println("Welcome to the 237 Bank App!");
 
@@ -66,6 +68,7 @@ public class MainMenu {
         return selection;
     }
 
+    // this is the process input for the login page 
     public void processAccountInput(int selection) {
         switch (selection) {
             case 1:
@@ -114,6 +117,7 @@ public class MainMenu {
         }
     }
 
+    // change password method 
     public void performChangePassword() {
         System.out.print("Enter your current password: ");
         String currentPassword = keyboardInput.next();
@@ -135,7 +139,7 @@ public class MainMenu {
         System.out.print("Enter password: ");
         String password = keyboardInput.next();
 
-        // check password
+        // check password against all users to determine which user to log in 
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i) != null && users.get(i).getUsername().equals(username)
                     && users.get(i).comparePasswords(password)) {
@@ -160,6 +164,7 @@ public class MainMenu {
         users.get(currentUserIndex).getAccounts().get(account).deposit(depositAmount);
     }
 
+    // switch accounts, logs out the current user and returns them to the login page 
     public void performSwitchAccounts() {
         currentUserIndex = -1;
         isLoggedIn = false;
@@ -260,6 +265,7 @@ public class MainMenu {
         int count = 1;
         ArrayList<BankAccount> allAccounts = new ArrayList<>();
 
+        // loop over and display accounts available 
         for (Customer user : users) {
             for (BankAccount account : user.getAccounts()) {
                 System.out.println(count + ". " + account.getAccountName() + " (User: " + user.getUsername() + ")");
