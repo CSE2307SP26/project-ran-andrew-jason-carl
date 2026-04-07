@@ -196,6 +196,4 @@ public class BankAccountTest {
         customer.addAccount(new BankAccount());
         assertEquals(2, customer.getAccounts().size());
     }
-
-
 }

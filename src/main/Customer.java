@@ -7,7 +7,12 @@ public class Customer extends User {
     private List<BankAccount> accounts;
 
     public Customer(String username) {
-        super(username);
+        super(username, "password");
+        this.accounts = new ArrayList<>();
+    }
+
+    public Customer(String username, String password) {
+        super(username, password);
         this.accounts = new ArrayList<>();
     }
 
