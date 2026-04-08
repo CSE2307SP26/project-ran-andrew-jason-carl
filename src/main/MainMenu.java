@@ -51,7 +51,7 @@ public class MainMenu {
         System.out.println("2. View account balance");
         System.out.println("3. Create a new account");
         System.out.println("4. Make a transfer");
-        System.out.println("5. Make a withdraw");
+        System.out.println("5. Make a withdraw (password required)");
         System.out.println("6. View transaction history");
         System.out.println("7. Switch accounts");
         System.out.println("8. Change password");
@@ -214,16 +214,27 @@ public class MainMenu {
     }
 
     public void performWithdraw() {
+        int account = selectAccount();
+        BankAccount selectedAccount = users.get(currentUserIndex).getAccounts().get(account);
+
+        System.out.print("Enter your password to confirm withdrawal: ");
+        String password = keyboardInput.next();
+
+        if (!users.get(currentUserIndex).comparePasswords(password)) {
+            System.out.println("Incorrect password. Withdrawal cancelled.\n\n");
+            return;
+        }
+
         double withdrawAmount = -1;
-        while (withdrawAmount < 0 || withdrawAmount > users.get(currentUserIndex).getAccounts().get(0).getBalance()) {
+        while (withdrawAmount < 0 || withdrawAmount > selectedAccount.getBalance()) {
             System.out.print("How much would you like to withdraw: ");
             withdrawAmount = keyboardInput.nextInt();
         }
-        int account = selectAccount();
-        users.get(currentUserIndex).getAccounts().get(account).withdraw(withdrawAmount); // withdraw it from the
-                                                                                         // selected account only for
-                                                                                         // now.
+
+        selectedAccount.withdraw(withdrawAmount);
+        System.out.println("Withdrawal successful!\n\n");
     }
+
 
     public void performTransfer() {
         // make user pick account first
