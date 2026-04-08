@@ -40,12 +40,12 @@ public class BankAccountTest {
         BankAccount testAccount = new BankAccount();
         testAccount.deposit(50);
         testAccount.deposit(25);
-        assertEquals("Deposit: 50.0\nDeposit: 25.0\n", testAccount.getTransactionHistory());
+        assertEquals("Deposit: 50.0 | Category: No category\nDeposit: 25.0 | Category: No category\n", testAccount.getTransactionHistory());
 
         BankAccount account3 = new BankAccount();
         account3.deposit(100);
         account3.deposit(200);
-        assertEquals("Deposit: 100.0\nDeposit: 200.0\n", account3.getTransactionHistory());
+        assertEquals("Deposit: 100.0 | Category: No category\nDeposit: 200.0 | Category: No category\n", account3.getTransactionHistory());
         
 
         // test empty account 

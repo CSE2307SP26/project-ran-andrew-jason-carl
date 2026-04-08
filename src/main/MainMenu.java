@@ -56,7 +56,7 @@ public class MainMenu {
         System.out.println("6. View transaction history");
         System.out.println("7. Switch accounts");
         System.out.println("8. Change password");
-        System.out.println("9. Show Accounts")
+        System.out.println("9. Show Accounts");
         System.out.println("10. Change account name");
         System.out.println("11. Exit the app");
         System.out.println();
@@ -119,6 +119,7 @@ public class MainMenu {
             
             case 10: 
               performRenameAccount();
+              break;
             
             case 11:
                 System.out.println("Thank you for using the 237 Bank App!");
@@ -234,12 +235,10 @@ public class MainMenu {
         }
 
         double withdrawAmount = -1;
-        while (withdrawAmount < 0 || withdrawAmount > selectedAccount.getBalance()) {
+        while (withdrawAmount <= 0 || withdrawAmount > selectedAccount.getBalance()) {
             System.out.print("How much would you like to withdraw: ");
             withdrawAmount = keyboardInput.nextInt();
         }
-        int account = selectAccount();
-        selectedAccount.withdraw(withdrawAmount);
         String category = selectCategory();
         users.get(currentUserIndex).getAccounts().get(account).withdraw(withdrawAmount, category); // withdraw it from the selected account only for now
         System.out.println("Withdrawal successful. Withdrew $ " + withdrawAmount + " | Category: " + category + "\n");
