@@ -55,7 +55,8 @@ public class MainMenu {
         System.out.println("6. View transaction history");
         System.out.println("7. Switch accounts");
         System.out.println("8. Change password");
-        System.out.println("9. Exit the app");
+        System.out.println("9. Show Accounts")
+        System.out.println("10. Exit the app");
         System.out.println();
     }
 
@@ -111,6 +112,9 @@ public class MainMenu {
                 performChangePassword();
                 break;
             case 9:
+                performShowAccounts();
+                break;
+            case 10:
                 System.out.println("Thank you for using the 237 Bank App!");
                 System.exit(0);
                 break;
@@ -258,6 +262,11 @@ public class MainMenu {
         }
     }
 
+    public void performShowAccounts(){
+        users.get(currentUserIndex).showAccounts();
+        System.out.println();
+    }
+
     // for all accounts in system
     private BankAccount selectAnyAccount() {
         System.out.println("Select destination account:");
@@ -301,6 +310,8 @@ public class MainMenu {
 
         return accountSelection - 1;
     }
+
+    
 
     public void run() {
         int selection = -1;
