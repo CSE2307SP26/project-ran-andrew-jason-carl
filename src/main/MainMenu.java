@@ -6,8 +6,8 @@ import java.util.Scanner;
 
 public class MainMenu {
 
-    private static final int EXIT_SELECTION = 10;
-    private static final int MAX_SELECTION = 10;
+    private static final int EXIT_SELECTION = 11;
+    private static final int MAX_SELECTION = 11;
     private static final int ACCOUNT_OPTIONS_MAX_SELECTION = 3;
 
     private ArrayList<Customer> users = new ArrayList<>();
@@ -52,14 +52,13 @@ public class MainMenu {
         System.out.println("2. View account balance");
         System.out.println("3. Create a new account");
         System.out.println("4. Make a transfer");
-        System.out.println("5. Make a withdraw");
+        System.out.println("5. Make a withdraw (password required)");
         System.out.println("6. View transaction history");
         System.out.println("7. Switch accounts");
         System.out.println("8. Change password");
-        System.out.println("9. Change account name");
-        System.out.println("10. Exit the app");
-        
-
+        System.out.println("9. Show Accounts")
+        System.out.println("10. Change account name");
+        System.out.println("11. Exit the app");
         System.out.println();
     }
 
@@ -114,10 +113,14 @@ public class MainMenu {
             case 8:
                 performChangePassword();
                 break;
-            case 9: 
-                performRenameAccount();
+            case 9:
+                performShowAccounts();
                 break;
-            case 10:
+            
+            case 10: 
+              performRenameAccount();
+            
+            case 11:
                 System.out.println("Thank you for using the 237 Bank App!");
                 System.exit(0);
                 break;
@@ -219,12 +222,24 @@ public class MainMenu {
     }
 
     public void performWithdraw() {
+        int account = selectAccount();
+        BankAccount selectedAccount = users.get(currentUserIndex).getAccounts().get(account);
+
+        System.out.print("Enter your password to confirm withdrawal: ");
+        String password = keyboardInput.next();
+
+        if (!users.get(currentUserIndex).comparePasswords(password)) {
+            System.out.println("Incorrect password. Withdrawal cancelled.\n\n");
+            return;
+        }
+
         double withdrawAmount = -1;
-        while (withdrawAmount < 0 || withdrawAmount > users.get(currentUserIndex).getAccounts().get(0).getBalance()) {
+        while (withdrawAmount < 0 || withdrawAmount > selectedAccount.getBalance()) {
             System.out.print("How much would you like to withdraw: ");
             withdrawAmount = keyboardInput.nextInt();
         }
         int account = selectAccount();
+        selectedAccount.withdraw(withdrawAmount);
         String category = selectCategory();
         users.get(currentUserIndex).getAccounts().get(account).withdraw(withdrawAmount, category); // withdraw it from the selected account only for now
         System.out.println("Withdrawal successful. Withdrew $ " + withdrawAmount + " | Category: " + category + "\n");
@@ -265,6 +280,11 @@ public class MainMenu {
         } else {
             System.out.println("Account could not be closed. Please make sure your balance is 0.");
         }
+    }
+
+    public void performShowAccounts(){
+        users.get(currentUserIndex).showAccounts();
+        System.out.println();
     }
 
     // for all accounts in system
@@ -310,6 +330,8 @@ public class MainMenu {
 
         return accountSelection - 1;
     }
+
+    
 
     public void run() {
         int selection = -1;

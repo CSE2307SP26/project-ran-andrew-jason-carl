@@ -23,11 +23,15 @@
 
 10. Users should be able to add password to their accounts and change passwords
 11. Users should be able to switch user accounts to log in depending on what type of user they are (regular user, bank admin)
+12. Customers can view all of their accounts with their names and balance
+13. Withdraw now requires user to enter password before confirming the withdrawal
 
 
 # User stories completed this iteration
 1. Users should be able to add password to their accounts and change passwords
 2. Users should be able to switch user accounts to log in depending on what type of user they are (regular user, bank admin)
+3. Customers can view all of their accounts with their names and balance
+4. Withdraw now requires user to enter password before confirming the withdrawal
 
 # User stories we intend to complete next iteration 
 N/A for now apr 7. 
