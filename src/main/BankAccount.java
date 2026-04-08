@@ -25,14 +25,18 @@ public class BankAccount {
         return this.accountName;
     }
 
-    public void deposit(double amount) {
+    public void deposit(double amount){
+        deposit (amount, "No category");
+    }
+
+    public void deposit(double amount, String category) {
         if(accountClosed) {
             System.out.println("Account is closed. No transactions can be made.");
             return;
         }
         if(amount > 0) {
             this.balance += amount;
-            this.transactionHistory.add("Deposit: " + amount);
+            this.transactionHistory.add("Deposit: " + amount + " | Category: " + category);
         } else {
             throw new IllegalArgumentException();
         }
@@ -90,6 +94,10 @@ public class BankAccount {
     }
 
     public void withdraw(double amount){
+        withdraw(amount, "No category");
+    }
+
+    public void withdraw(double amount, String category){
         double curr = this.balance;
         if(accountClosed) {
             System.out.println("Account is closed. No transactions can be made.");
@@ -97,9 +105,18 @@ public class BankAccount {
         }
         if(amount > 0 && amount <= curr){
             this.balance -= amount;
-            this.transactionHistory.add("Withdrawal: " + amount);
+            this.transactionHistory.add("Withdrawal: " + amount + " | Category: " + category);
         } else {
             throw new IllegalArgumentException();
         }
     }
+
+    public void setAccountName (String newName){
+        if (newName == null || newName.isEmpty()){
+            throw new IllegalArgumentException();
+        } else {
+            this.accountName = newName;
+        }
+    }
 }
+
