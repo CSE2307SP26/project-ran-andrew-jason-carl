@@ -8,10 +8,13 @@ public class MainMenu {
 
     private static final int EXIT_SELECTION = 11;
     private static final int MAX_SELECTION = 11;
-    private static final int ACCOUNT_OPTIONS_MAX_SELECTION = 3;
+    private static final int ACCOUNT_OPTIONS_MAX_SELECTION = 4;  // added admin login option
+    private static final int ADMIN_OPTIONS_MAX_SELECTION = 5;
 
     private ArrayList<Customer> users = new ArrayList<>();
     private int currentUserIndex = -1;
+    private Admin admin;
+    private boolean isAdminLoggedIn = false;
     private Scanner keyboardInput;
     private boolean isLoggedIn;
 
@@ -32,6 +35,9 @@ public class MainMenu {
         users.add(userCharles);
 
         isLoggedIn = false;
+
+        // hardcoded admin account
+        admin = new Admin("admin", "admin");
     }
 
     // this is the method that displays the dashboard for the login page 
@@ -40,7 +46,8 @@ public class MainMenu {
 
         System.out.println("1. Log in");
         System.out.println("2. Create an account");
-        System.out.println("3. Exit the app");
+        System.out.println("3. Admin login");
+        System.out.println("4. Exit the app");
     }
 
     // the original dashboard to be displayed once the user logs in 
@@ -81,6 +88,9 @@ public class MainMenu {
                 performCreateAccount();
                 break;
             case 3:
+                performAdminLogin();
+                break;
+            case 4:
                 System.out.println("Thank you for using the 237 Bank App!");
                 System.exit(0);
                 break;
@@ -332,12 +342,89 @@ public class MainMenu {
 
     
 
+    public void displayAdminOptions() {
+        System.out.println("=== Admin Dashboard ===");
+        System.out.println("1. View all accounts");
+        System.out.println("2. Freeze an account");
+        System.out.println("3. Unfreeze an account");
+        System.out.println("4. Add interest to an account");
+        System.out.println("5. Collect fee from an account");
+        System.out.println("6. Logout");
+        System.out.println();
+    }
+
+    public void processAdminInput(int selection) {
+        switch (selection) {
+            case 1:
+                admin.viewAllAccounts(users);
+                break;
+            case 2:
+                performAdminFreezeAccount();
+                break;
+            case 3:
+                performAdminUnfreezeAccount();
+                break;
+            case 4:
+                performAdminAddInterest();
+                break;
+            case 5:
+                performAdminCollectFee();
+                break;
+            case 6:
+                isAdminLoggedIn = false;
+                System.out.println("Admin logged out.\n");
+                break;
+        }
+    }
+
+    public void performAdminLogin() {
+        System.out.print("Enter admin username: ");
+        String username = keyboardInput.next();
+        System.out.print("Enter admin ID: ");
+        String adminId = keyboardInput.next();
+
+        if (admin.getUsername().equals(username) && admin.getAdminId().equals(adminId)) {
+            isAdminLoggedIn = true;
+            System.out.println("Admin login successful!\n");
+        } else {
+            System.out.println("Invalid admin credentials.\n");
+        }
+    }
+
+    public void performAdminFreezeAccount() {
+        BankAccount account = selectAnyAccount();
+        admin.freezeAccount(account);
+    }
+
+    public void performAdminUnfreezeAccount() {
+        BankAccount account = selectAnyAccount();
+        admin.unfreezeAccount(account);
+    }
+
+    public void performAdminAddInterest() {
+        BankAccount account = selectAnyAccount();
+        System.out.print("Enter interest rate (0.0 - 1.0): ");
+        double rate = keyboardInput.nextDouble();
+        admin.addInterest(account, rate);
+        System.out.println("Interest applied.\n");
+    }
+
+    public void performAdminCollectFee() {
+        BankAccount account = selectAnyAccount();
+        System.out.print("Enter fee amount: ");
+        double fee = keyboardInput.nextDouble();
+        admin.collectFee(account, fee);
+        System.out.println("Fee collected.\n");
+    }
+
     public void run() {
         int selection = -1;
-        while (selection != EXIT_SELECTION) {
-
-            // check if it is logged in
-            if (isLoggedIn) {
+        while (true) {
+            if (isAdminLoggedIn) {
+                displayAdminOptions();
+                selection = getUserSelection(6);
+                processAdminInput(selection);
+            } else if (isLoggedIn) {
                 displayOptions();
                 selection = getUserSelection(MAX_SELECTION);
                 processInput(selection);

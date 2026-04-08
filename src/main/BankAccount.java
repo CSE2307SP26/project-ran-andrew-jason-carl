@@ -8,21 +8,36 @@ public class BankAccount {
     private String accountName;
     private ArrayList<String> transactionHistory = new ArrayList<>();
     private boolean accountClosed;
+    private boolean accountFrozen;
 
     public BankAccount() {
         this.balance = 0;
         this.accountName = "default";
         this.accountClosed = false;
+        this.accountFrozen = false;
     }
 
     public BankAccount(String accountName) {
         this.balance = 0;
         this.accountName = accountName;
         this.accountClosed = false;
+        this.accountFrozen = false;
     }
 
     public String getAccountName(){
         return this.accountName;
+    }
+
+    public boolean isFrozen() {
+        return this.accountFrozen;
+    }
+
+    public void freeze() {
+        this.accountFrozen = true;
+    }
+
+    public void unfreeze() {
+        this.accountFrozen = false;
     }
 
     public void deposit(double amount){
@@ -32,6 +47,10 @@ public class BankAccount {
     public void deposit(double amount, String category) {
         if(accountClosed) {
             System.out.println("Account is closed. No transactions can be made.");
+            return;
+        }
+        if(accountFrozen) {
+            System.out.println("Account is frozen. No transactions can be made.");
             return;
         }
         if(amount > 0) {
@@ -76,6 +95,10 @@ public class BankAccount {
             System.out.println("Account is closed. No transactions can be made.");
             return;
         }
+        if(accountFrozen) {
+            System.out.println("Account is frozen. No transactions can be made.");
+            return;
+        }
         if(to == null){
             throw new IllegalArgumentException();
         }
@@ -103,6 +126,10 @@ public class BankAccount {
             System.out.println("Account is closed. No transactions can be made.");
             return;
         }
+        if(accountFrozen) {
+            System.out.println("Account is frozen. No transactions can be made.");
+            return;
+        }
         if(amount > 0 && amount <= curr){
             this.balance -= amount;
             this.transactionHistory.add("Withdrawal: " + amount + " | Category: " + category);
@@ -119,4 +146,3 @@ public class BankAccount {
         }
     }
 }
-
