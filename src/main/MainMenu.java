@@ -170,14 +170,14 @@ public class MainMenu {
         String category = selectCategory();
 
         users.get(currentUserIndex).getAccounts().get(account).deposit(depositAmount, category);
-        System.out.println("Deposit successful. Deposited $ " + depositAmount + " | Category: " + category + "\n\n");
+        System.out.println("Deposit successful. Deposited $ " + depositAmount + " | Category: " + category + "\n");
     }
 
     // switch accounts, logs out the current user and returns them to the login page 
     public void performSwitchAccounts() {
         currentUserIndex = -1;
         isLoggedIn = false;
-        System.out.println("You have been logged out. Please log in to switch accounts.\n\n");
+        System.out.println("You have been logged out. Please log in to switch accounts.\n");
     }
 
     public void performCheckBalance() {
@@ -215,7 +215,7 @@ public class MainMenu {
 
         users.get(currentUserIndex).addAccount(new BankAccount(accountName));
 
-        System.out.println("New account created with the name: " + accountName + "\n\n");
+        System.out.println("New account created with the name: " + accountName + "\n");
     }
 
     public void performWithdraw() {
@@ -227,7 +227,7 @@ public class MainMenu {
         int account = selectAccount();
         String category = selectCategory();
         users.get(currentUserIndex).getAccounts().get(account).withdraw(withdrawAmount, category); // withdraw it from the selected account only for now
-        System.out.println("Withdrawal successful. Withdrew $ " + withdrawAmount + " | Category: " + category + "\n\n");
+        System.out.println("Withdrawal successful. Withdrew $ " + withdrawAmount + " | Category: " + category + "\n");
     }
 
     public void performTransfer() {
