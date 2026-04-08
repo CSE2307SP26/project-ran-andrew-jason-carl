@@ -1,12 +1,13 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class MainMenu {
 
-    private static final int EXIT_SELECTION = 9;
-    private static final int MAX_SELECTION = 9;
+    private static final int EXIT_SELECTION = 11;
+    private static final int MAX_SELECTION = 11;
     private static final int ACCOUNT_OPTIONS_MAX_SELECTION = 3;
 
     private ArrayList<Customer> users = new ArrayList<>();
@@ -56,7 +57,8 @@ public class MainMenu {
         System.out.println("7. Switch accounts");
         System.out.println("8. Change password");
         System.out.println("9. Show Accounts")
-        System.out.println("10. Exit the app");
+        System.out.println("10. Change account name");
+        System.out.println("11. Exit the app");
         System.out.println();
     }
 
@@ -114,7 +116,11 @@ public class MainMenu {
             case 9:
                 performShowAccounts();
                 break;
-            case 10:
+            
+            case 10: 
+              performRenameAccount();
+            
+            case 11:
                 System.out.println("Thank you for using the 237 Bank App!");
                 System.exit(0);
                 break;
@@ -164,15 +170,17 @@ public class MainMenu {
         }
 
         int account = selectAccount();
+        String category = selectCategory();
 
-        users.get(currentUserIndex).getAccounts().get(account).deposit(depositAmount);
+        users.get(currentUserIndex).getAccounts().get(account).deposit(depositAmount, category);
+        System.out.println("Deposit successful. Deposited $ " + depositAmount + " | Category: " + category + "\n");
     }
 
     // switch accounts, logs out the current user and returns them to the login page 
     public void performSwitchAccounts() {
         currentUserIndex = -1;
         isLoggedIn = false;
-        System.out.println("You have been logged out. Please log in to switch accounts.\n\n");
+        System.out.println("You have been logged out. Please log in to switch accounts.\n");
     }
 
     public void performCheckBalance() {
@@ -210,7 +218,7 @@ public class MainMenu {
 
         users.get(currentUserIndex).addAccount(new BankAccount(accountName));
 
-        System.out.println("New account created with the name: " + accountName + "\n\n");
+        System.out.println("New account created with the name: " + accountName + "\n");
     }
 
     public void performWithdraw() {
@@ -230,11 +238,12 @@ public class MainMenu {
             System.out.print("How much would you like to withdraw: ");
             withdrawAmount = keyboardInput.nextInt();
         }
-
+        int account = selectAccount();
         selectedAccount.withdraw(withdrawAmount);
-        System.out.println("Withdrawal successful!\n\n");
+        String category = selectCategory();
+        users.get(currentUserIndex).getAccounts().get(account).withdraw(withdrawAmount, category); // withdraw it from the selected account only for now
+        System.out.println("Withdrawal successful. Withdrew $ " + withdrawAmount + " | Category: " + category + "\n");
     }
-
 
     public void performTransfer() {
         // make user pick account first
@@ -339,6 +348,58 @@ public class MainMenu {
                 processAccountInput(selection);
             }
         }
+    }
+
+    public void performRenameAccount() {
+        int account = selectAccount();
+        keyboardInput.nextLine();
+        System.out.print("Enter new name for the account: ");
+        String newName = keyboardInput.nextLine();
+        if (newName == null || newName.isEmpty()) {
+            System.out.println("Invalid account name. Please try again.");
+            return;
+        }
+        users.get(currentUserIndex).getAccounts().get(account).setAccountName(newName);
+        System.out.println("Account renamed successfully! New name: " + newName);
+    }
+
+    public void displayCategories(){
+        System.out.println("Select a category: ");
+        List<String> categories = users.get(currentUserIndex).getCategories();
+        for(int i = 0; i < users.get(currentUserIndex).getCategories().size(); i++){
+            System.out.println((i + 1) + ". " + users.get(currentUserIndex).getCategories().get(i));
+        }
+        System.out.println((categories.size() + 1) + ". Add new category");
+        System.out.println((categories.size() + 2) + ". Skip");
+    }
+
+    public String selectCategory(){
+        displayCategories();
+        List<String> categories = users.get(currentUserIndex).getCategories();
+        int categorySelection = -1;
+        while (categorySelection < 1 || categorySelection > users.get(currentUserIndex).getCategories().size()+2) {
+            System.out.print("Please select a category: ");
+            categorySelection = keyboardInput.nextInt();
+        }
+        if (categorySelection == categories.size()+2){
+            return "No category";
+        }
+        if (categorySelection == categories.size()+1){
+            return addCategory();
+        }
+        return categories.get(categorySelection - 1);
+    }
+
+    public String addCategory(){
+        keyboardInput.nextLine();
+        System.out.print("Enter name for new category: ");
+        String newCategory = keyboardInput.nextLine();
+        if (newCategory == null || newCategory.isEmpty()) {
+            System.out.println("Invalid category name. Please try again.");
+            return selectCategory();
+        }
+        users.get(currentUserIndex).addCategory(newCategory);
+        return newCategory;
     }
 
     public static void main(String[] args) {
