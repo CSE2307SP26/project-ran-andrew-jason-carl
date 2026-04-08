@@ -24,6 +24,12 @@ public class Customer extends User {
         return accounts.remove(account);
     }
 
+    public void showAccounts() {
+        for (BankAccount account : accounts) {
+            System.out.println(account.getAccountName() + ": " + account.getBalance());
+        }
+    }
+    
     public List<BankAccount> getAccounts() {
         return accounts;
     }
