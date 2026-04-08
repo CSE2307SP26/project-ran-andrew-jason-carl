@@ -27,6 +27,9 @@
 13. Withdraw now requires user to enter password before confirming the withdrawal
 14. Users should be able to rename an existing account
 15. Users should be able to add a memo to each deposit/withdrawal they make by selecting or adding a new category
+16. A bank administrator should be able to freeze an account, blocking all transactions while preserving the balance.
+17. A bank administrator should be able to unfreeze a previously frozen account, restoring all capabilities.
+18. A bank administrator should be able to view all customer accounts and balances across the entire system.
 
 
 # User stories completed this iteration
@@ -62,3 +65,8 @@ chmod +x runApp.sh
 ./runApp.sh
 
 ```
+
+# Admin login credentials
+- Username: admin
+- Admin ID: admin
+
