@@ -19,12 +19,14 @@
 8. A bank adminstrator should be able to collect fees from existing accounts when necessary.
 9. A bank adminstrator should be able to add an interest payment to an existing account when necessary.
 
--- new since apr 7--
+-- new since April 8th--
 
 10. Users should be able to add password to their accounts and change passwords
 11. Users should be able to switch user accounts to log in depending on what type of user they are (regular user, bank admin)
 12. Customers can view all of their accounts with their names and balance
 13. Withdraw now requires user to enter password before confirming the withdrawal
+14. Users should be able to rename an existing account
+15. Users should be able to add a memo to each deposit/withdrawal they make by selecting or adding a new category
 
 
 # User stories completed this iteration
@@ -32,6 +34,8 @@
 2. Users should be able to switch user accounts to log in depending on what type of user they are (regular user, bank admin)
 3. Customers can view all of their accounts with their names and balance
 4. Withdraw now requires user to enter password before confirming the withdrawal
+5. Users should be able to rename an existing account
+6. Users should be able to add a memo to each deposit/withdrawal they make by selecting or adding a new category 
 
 # User stories we intend to complete next iteration 
 N/A for now apr 7. 
