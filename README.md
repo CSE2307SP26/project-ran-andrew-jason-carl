@@ -38,10 +38,13 @@
 3. Customers can view all of their accounts with their names and balance
 4. Withdraw now requires user to enter password before confirming the withdrawal
 5. Users should be able to rename an existing account
-6. Users should be able to add a memo to each deposit/withdrawal they make by selecting or adding a new category 
+6. Users should be able to add a memo to each deposit/withdrawal they make by selecting or adding a new category
+7. A bank administrator should be able to freeze an account, blocking all transactions while preserving the balance.
+8. A bank administrator should be able to unfreeze a previously frozen account, restoring all capabilities.
+9. A bank administrator should be able to view all customer accounts and balances across the entire system.
 
 # User stories we intend to complete next iteration 
-N/A for now apr 7. 
+1. Users will be able to create different types accounts (savings, checking)
 
 # Is there anything that you implemented but doesn't currently work? 
 None that we know of. 
