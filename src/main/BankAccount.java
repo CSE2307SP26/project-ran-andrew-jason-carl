@@ -8,31 +8,54 @@ public class BankAccount {
     private String accountName;
     private ArrayList<String> transactionHistory = new ArrayList<>();
     private boolean accountClosed;
+    private boolean accountFrozen;
 
     public BankAccount() {
         this.balance = 0;
         this.accountName = "default";
         this.accountClosed = false;
+        this.accountFrozen = false;
     }
 
     public BankAccount(String accountName) {
         this.balance = 0;
         this.accountName = accountName;
         this.accountClosed = false;
+        this.accountFrozen = false;
     }
 
     public String getAccountName(){
         return this.accountName;
     }
 
-    public void deposit(double amount) {
+    public boolean isFrozen() {
+        return this.accountFrozen;
+    }
+
+    public void freeze() {
+        this.accountFrozen = true;
+    }
+
+    public void unfreeze() {
+        this.accountFrozen = false;
+    }
+
+    public void deposit(double amount){
+        deposit (amount, "No category");
+    }
+
+    public void deposit(double amount, String category) {
         if(accountClosed) {
             System.out.println("Account is closed. No transactions can be made.");
             return;
         }
+        if(accountFrozen) {
+            System.out.println("Account is frozen. No transactions can be made.");
+            return;
+        }
         if(amount > 0) {
             this.balance += amount;
-            this.transactionHistory.add("Deposit: " + amount);
+            this.transactionHistory.add("Deposit: " + amount + " | Category: " + category);
         } else {
             throw new IllegalArgumentException();
         }
@@ -72,6 +95,10 @@ public class BankAccount {
             System.out.println("Account is closed. No transactions can be made.");
             return;
         }
+        if(accountFrozen) {
+            System.out.println("Account is frozen. No transactions can be made.");
+            return;
+        }
         if(to == null){
             throw new IllegalArgumentException();
         }
@@ -82,24 +109,40 @@ public class BankAccount {
         if(fromAmount >= amount && amount > 0){
             this.balance -= amount;
             to.balance += amount;
-            this.transactionHistory.add("Transfer to account " + to + ": " + amount);
-            to.transactionHistory.add("Transfer from account " + this + ": " + amount);
+            this.transactionHistory.add("Transfer to account " + to.getAccountName() + ": " + amount);
+            to.transactionHistory.add("Transfer from account " + this.getAccountName() + ": " + amount);
         } else {
             throw new IllegalArgumentException();
         }
     }
 
     public void withdraw(double amount){
+        withdraw(amount, "No category");
+    }
+
+    public void withdraw(double amount, String category){
         double curr = this.balance;
         if(accountClosed) {
             System.out.println("Account is closed. No transactions can be made.");
             return;
         }
+        if(accountFrozen) {
+            System.out.println("Account is frozen. No transactions can be made.");
+            return;
+        }
         if(amount > 0 && amount <= curr){
             this.balance -= amount;
-            this.transactionHistory.add("Withdrawal: " + amount);
+            this.transactionHistory.add("Withdrawal: " + amount + " | Category: " + category);
         } else {
             throw new IllegalArgumentException();
+        }
+    }
+
+    public void setAccountName (String newName){
+        if (newName == null || newName.isEmpty()){
+            throw new IllegalArgumentException();
+        } else {
+            this.accountName = newName;
         }
     }
 }

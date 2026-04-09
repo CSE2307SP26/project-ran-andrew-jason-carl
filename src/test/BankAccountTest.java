@@ -40,12 +40,12 @@ public class BankAccountTest {
         BankAccount testAccount = new BankAccount();
         testAccount.deposit(50);
         testAccount.deposit(25);
-        assertEquals("Deposit: 50.0\nDeposit: 25.0\n", testAccount.getTransactionHistory());
+        assertEquals("Deposit: 50.0 | Category: No category\nDeposit: 25.0 | Category: No category\n", testAccount.getTransactionHistory());
 
         BankAccount account3 = new BankAccount();
         account3.deposit(100);
         account3.deposit(200);
-        assertEquals("Deposit: 100.0\nDeposit: 200.0\n", account3.getTransactionHistory());
+        assertEquals("Deposit: 100.0 | Category: No category\nDeposit: 200.0 | Category: No category\n", account3.getTransactionHistory());
         
 
         // test empty account 
@@ -197,5 +197,92 @@ public class BankAccountTest {
         assertEquals(2, customer.getAccounts().size());
     }
 
+    @Test
+    public void testRenameAccount(){
+        BankAccount testAccount = new BankAccount("Old");
+        testAccount.setAccountName("New Name");
+        assertEquals("New Name", testAccount.getAccountName());
+    }
 
+    @Test
+    public void testInvalieAccountName(){
+        BankAccount testAccount = new BankAccount("Old");
+        try {
+            testAccount.setAccountName("");
+            fail();
+        } catch (IllegalArgumentException e) {
+            // do nothing, test passes
+        }
+        try {
+            testAccount.setAccountName(null);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // do nothing, test passes
+        }
+    }
+
+    @Test 
+    //test that renaming account does not change balance
+    public void testNewAccountBalance(){
+        BankAccount testAccount = new BankAccount("Old");
+        testAccount.deposit(50);
+        testAccount.setAccountName("New Name");
+        assertEquals(50, testAccount.getBalance(), 0.01);
+    }
+
+    @Test 
+    public void testDepositWithNoCategory(){
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(50);
+        assertEquals("Deposit: 50.0 | Category: No category\n", testAccount.getTransactionHistory());
+    }
+
+    @Test 
+    public void testDepositWithCategory(){
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(50, "Food");
+        assertEquals("Deposit: 50.0 | Category: Food\n", testAccount.getTransactionHistory());
+    }
+
+    @Test 
+    public void testWithdrawWithNoCategory(){
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(50);
+        testAccount.withdraw(30);
+        assertEquals("Deposit: 50.0 | Category: No category\nWithdrawal: 30.0 | Category: No category\n", testAccount.getTransactionHistory());
+    }
+
+    @Test
+    public void testWithdrawWithCategory(){
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(50);
+        testAccount.withdraw(30, "Entertainment");
+        assertEquals("Deposit: 50.0 | Category: No category\nWithdrawal: 30.0 | Category: Entertainment\n", testAccount.getTransactionHistory());
+    }
+
+    @Test 
+    public void testAddCategory(){
+        Customer testCustomer = new Customer("test");
+        testCustomer.addCategory("Insurance");
+        assertEquals(6, testCustomer.getCategories().size());
+        assertEquals("Insurance", testCustomer.getCategories().get(5));
+    }
+
+    @Test 
+    public void testAddInvalidCategory(){
+        Customer testCustomer = new Customer("test");
+        try {
+            testCustomer.addCategory("");
+            fail();
+        } catch (IllegalArgumentException e) {
+            // do nothing, test passes
+        }
+        try {
+            testCustomer.addCategory(null);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // do nothing, test passes
+        }
+    }
 }
+
