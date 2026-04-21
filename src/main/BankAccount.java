@@ -9,12 +9,16 @@ public class BankAccount {
     private ArrayList<String> transactionHistory = new ArrayList<>();
     private boolean accountClosed;
     private boolean accountFrozen;
+    private double interestRate;
+
+    public static final double DEFAULT_INTEREST_RATE = 0.05;
 
     public BankAccount() {
         this.balance = 0;
         this.accountName = "default";
         this.accountClosed = false;
         this.accountFrozen = false;
+        this.interestRate = DEFAULT_INTEREST_RATE;
     }
 
     public BankAccount(String accountName) {
@@ -22,6 +26,32 @@ public class BankAccount {
         this.accountName = accountName;
         this.accountClosed = false;
         this.accountFrozen = false;
+        this.interestRate = DEFAULT_INTEREST_RATE;
+    }
+
+    public BankAccount(String accountName, double interestRate) {
+        this.balance = 0;
+        this.accountName = accountName;
+        this.accountClosed = false;
+        this.accountFrozen = false;
+        setInterestRate(interestRate);
+    }
+
+    public double getInterestRate() {
+        return this.interestRate;
+    }
+
+    public void setInterestRate(double rate) {
+        if (rate < 0 || rate > 1) {
+            throw new IllegalArgumentException("Interest rate must be between 0 and 1");
+        }
+        this.interestRate = rate;
+    }
+
+    // Applies the account's stored interest rate to the current balance
+    public void applyInterest() {
+        double interest = this.balance * this.interestRate;
+        deposit(interest);
     }
 
     public String getAccountName(){

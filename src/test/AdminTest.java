@@ -31,7 +31,8 @@ public class AdminTest {
     @Test
     public void testAddInterestIncreasesBalance() {
         account.deposit(1000);
-        admin.addInterest(account, 0.05);
+        account.setInterestRate(0.05);
+        account.applyInterest();
         assertEquals(1050, account.getBalance(), 0.01);
     }
 
@@ -39,7 +40,7 @@ public class AdminTest {
     public void testAddInterestNegativeRate() {
         account.deposit(1000);
         assertThrows(IllegalArgumentException.class, () -> {
-            admin.addInterest(account, -0.05);
+            account.setInterestRate(-0.05);
         });
     }
 
@@ -47,15 +48,16 @@ public class AdminTest {
     public void testAddInterestRateAboveOne() {
         account.deposit(1000);
         assertThrows(IllegalArgumentException.class, () -> {
-            admin.addInterest(account, 1.5);
+            account.setInterestRate(1.5);
         });
     }
 
     @Test
     public void testAddInterestMultipleTimes() {
         account.deposit(1000);
-        admin.addInterest(account, 0.05);
-        admin.addInterest(account, 0.05);
+        account.setInterestRate(0.05);
+        account.applyInterest();
+        account.applyInterest();
         assertEquals(1102.50, account.getBalance(), 0.01);
     }
 
@@ -63,7 +65,7 @@ public class AdminTest {
     public void testBalanceUnchangedAfterInvalidRate() {
         account.deposit(1000);
         assertThrows(IllegalArgumentException.class, () -> {
-            admin.addInterest(account, -0.05);
+            account.setInterestRate(-0.05);
         });
         assertEquals(1000, account.getBalance(), 0.01);
     }
@@ -72,7 +74,7 @@ public class AdminTest {
     @Test
     public void testCollectFeeReducesBalance() {
         account.deposit(200);
-        admin.collectFee(account, 25);
+        account.withdraw(25);
         assertEquals(175, account.getBalance(), 0.01);
     }
 
@@ -80,14 +82,14 @@ public class AdminTest {
     public void testCollectFeeExceedsBalance() {
         account.deposit(30);
         assertThrows(IllegalArgumentException.class, () -> {
-            admin.collectFee(account, 50);
+            account.withdraw(50);
         });
     }
 
     @Test
     public void testCollectFeeOnEmptyAccount() {
         assertThrows(IllegalArgumentException.class, () -> {
-            admin.collectFee(account, 25);
+            account.withdraw(25);
         });
     }
 
@@ -95,16 +97,16 @@ public class AdminTest {
     public void testCollectNegativeFee() {
         account.deposit(100);
         assertThrows(IllegalArgumentException.class, () -> {
-            admin.collectFee(account, -10);
+            account.withdraw(-10);
         });
     }
 
     @Test
     public void testCollectFeeMultipleTimes() {
         account.deposit(300);
-        admin.collectFee(account, 25);
-        admin.collectFee(account, 25);
-        admin.collectFee(account, 25);
+        account.withdraw(25);
+        account.withdraw(25);
+        account.withdraw(25);
         assertEquals(225, account.getBalance(), 0.01);
     }
 
@@ -112,7 +114,7 @@ public class AdminTest {
     public void testBalanceUnchangedAfterFailedFee() {
         account.deposit(30);
         assertThrows(IllegalArgumentException.class, () -> {
-            admin.collectFee(account, 50);
+            account.withdraw(50);
         });
         assertEquals(30, account.getBalance(), 0.01);
     }
