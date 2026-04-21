@@ -53,6 +53,7 @@ None that we know of.
 ## What commands are needed to compile and run your code from the command line?
 
 ```
+cd project-ran-andrew-jason-carl 
 javac -d out src/main/*.java
 java -cp out main.MainMenu
 ```
