@@ -403,17 +403,15 @@ public class MainMenu {
 
     public void performAdminAddInterest() {
         BankAccount account = selectAnyAccount();
-        System.out.print("Enter interest rate (0.0 - 1.0): ");
-        double rate = keyboardInput.nextDouble();
-        admin.addInterest(account, rate);
-        System.out.println("Interest applied.\n");
+        account.applyInterest();
+        System.out.printf("Interest applied at rate %.1f%%.%n%n", account.getInterestRate() * 100);
     }
 
     public void performAdminCollectFee() {
         BankAccount account = selectAnyAccount();
         System.out.print("Enter fee amount: ");
         double fee = keyboardInput.nextDouble();
-        admin.collectFee(account, fee);
+        account.withdraw(fee);
         System.out.println("Fee collected.\n");
     }
 

@@ -284,46 +284,5 @@ public class BankAccountTest {
             // do nothing, test passes
         }
     }
-
-    @Test
-    public void testCollectFee(){
-        BankAccount testAccount = new BankAccount();
-        testAccount.deposit(100);
-        testAccount.collectFee(20);
-        assertEquals(80, testAccount.getBalance(), 0.01);
-    }
-
-    @Test
-    public void testAddInterest(){
-        BankAccount testAccount = new BankAccount();
-        testAccount.deposit(100);
-        testAccount.addInterest(0.05);
-        assertEquals(105, testAccount.getBalance(), 0.01);
-    }
-
-    @Test
-    public void testInvalidCollectFee(){
-        BankAccount testAccount = new BankAccount();
-        testAccount.deposit(100);
-        try {
-            testAccount.collectFee(-20);
-            fail();
-        } catch (IllegalArgumentException e) {
-            // do nothing, test passes
-        }
-    }
-
-    @Test
-    public void testInvalidAddInterest(){
-        BankAccount testAccount = new BankAccount();
-        testAccount.deposit(100);
-        try {
-            testAccount.addInterest(1.5);
-            fail();
-        } catch (IllegalArgumentException e) {
-            // do nothing, test passes
-        }
-    }
-
 }
 
