@@ -44,7 +44,8 @@
 9. A bank administrator should be able to view all customer accounts and balances across the entire system.
 
 # User stories we intend to complete next iteration 
-1. Users will be able to create different types accounts (savings, checking)
+1. Users will be able to create different types accounts (savings, checking) (carl)
+2. Users should be able obtain a bank statement in the form of a txt file. (carl)
 
 # Is there anything that you implemented but doesn't currently work? 
 None that we know of. 
