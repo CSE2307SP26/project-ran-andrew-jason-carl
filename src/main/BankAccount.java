@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class BankAccount {
 
     private double balance;
+    private double interestRate;
     private String accountName;
     private ArrayList<String> transactionHistory = new ArrayList<>();
     private boolean accountClosed;
@@ -15,6 +16,7 @@ public class BankAccount {
         this.accountName = "default";
         this.accountClosed = false;
         this.accountFrozen = false;
+        this.interestRate = 0;
     }
 
     public BankAccount(String accountName) {
@@ -22,6 +24,7 @@ public class BankAccount {
         this.accountName = accountName;
         this.accountClosed = false;
         this.accountFrozen = false;
+        this.interestRate = 0;
     }
 
     public String getAccountName(){
@@ -144,5 +147,20 @@ public class BankAccount {
         } else {
             this.accountName = newName;
         }
+    }
+
+    public void collectFee(double fee){
+        if (fee <=0){
+            throw new IllegalArgumentException();
+        } 
+        withdraw(fee);
+    }
+
+    public void addInterest(double rate){
+        if (rate < 0 || rate > 1) {
+            throw new IllegalArgumentException("Interest rate must be between 0 and 1");
+        }
+        double interest = this.balance * rate;
+        this.deposit(interest);
     }
 }
