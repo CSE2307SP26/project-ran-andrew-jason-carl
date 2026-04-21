@@ -1,6 +1,14 @@
 package main;
 
 import java.util.ArrayList;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class BankAccount {
 
@@ -175,4 +183,48 @@ public class BankAccount {
             this.accountName = newName;
         }
     }
+
+    public Path generateBankStatement(String forUser) {
+        String datePart = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
+
+        StringBuilder statementName = new StringBuilder();
+        statementName.append("bank_statement_");
+        statementName.append(datePart);
+        statementName.append("_");
+        statementName.append(forUser);
+        statementName.append("_");
+        statementName.append(accountName);
+        statementName.append(".txt");
+
+        Path outputPath = Paths.get(System.getProperty("user.dir"), statementName.toString());
+
+        try (BufferedWriter writer = Files.newBufferedWriter(outputPath)) {
+            writer.write("Bank Statement");
+            writer.newLine();
+            writer.write("Date: " + LocalDate.now());
+            writer.newLine();
+            writer.write("Account Name: " + ((this.accountName == null || this.accountName.isBlank()) ? "N/A" : this.accountName));
+            writer.newLine();
+            writer.write("Current Balance: " + this.balance);
+            writer.newLine();
+            writer.write("Transaction History:");
+            writer.newLine();
+
+            if (this.transactionHistory.isEmpty()) {
+                writer.write("There are no transactions yet.");
+                writer.newLine();
+            } else {
+                for (String transaction : this.transactionHistory) {
+                    writer.write(transaction);
+                    writer.newLine();
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save bank statement.", e);
+        }
+
+        return outputPath;
+    }
+
+    
 }
