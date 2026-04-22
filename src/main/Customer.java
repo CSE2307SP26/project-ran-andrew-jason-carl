@@ -29,9 +29,17 @@ public class Customer extends User {
 
     public void showAccounts() {
         for (BankAccount account : accounts) {
-            System.out.println(account.getAccountName() + ": " + account.getBalance() + " | TYPE: " + account.getAccountType() + "\n");
+            double balance = account.getBalance();
+            String lowBalanceStatus = balance < 5.00 ? " | LOW BALANCE" : "";
+
+            System.out.println(account.getAccountName()
+                    + ": $" + String.format("%.2f", balance)
+                    + lowBalanceStatus
+                    + " | TYPE: " + account.getAccountType()
+                    + "\n");
         }
     }
+
     
     public List<BankAccount> getAccounts() {
         return accounts;
