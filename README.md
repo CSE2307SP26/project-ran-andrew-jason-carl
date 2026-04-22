@@ -23,8 +23,8 @@
 
 10. Users should be able to add password to their accounts and change passwords
 11. Users should be able to switch user accounts to log in depending on what type of user they are (regular user, bank admin)
-12. Customers can view all of their accounts with their names and balance
-13. Withdraw now requires user to enter password before confirming the withdrawal
+12. A customer can view all of their accounts with their names and balance
+13. A user need to enter password before confirming the withdrawal
 14. Users should be able to rename an existing account
 15. Users should be able to add a memo to each deposit/withdrawal they make by selecting or adding a new category
 16. A bank administrator should be able to freeze an account, blocking all transactions while preserving the balance.
@@ -36,6 +36,7 @@
 19. A bank customer will be notify if an account has a low balance (<5.00)
 20. A bank customer should be able to view their largest transactions by category and as a whole.
 21. A bank customer should be able to set a limit per category.
+22. A bank customer should be able to set primary/favorite accounts
 
 
 # User stories completed this iteration
