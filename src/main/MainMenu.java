@@ -7,8 +7,8 @@ import java.util.Scanner;
 
 public class MainMenu {
 
-    private static final int EXIT_SELECTION = 14;
-    private static final int MAX_SELECTION = 14;
+    private static final int EXIT_SELECTION = 15;
+    private static final int MAX_SELECTION = 15;
     private static final int ACCOUNT_OPTIONS_MAX_SELECTION = 4;  // added admin login option
     private static final int ADMIN_OPTIONS_MAX_SELECTION = 5;
 
@@ -30,7 +30,7 @@ public class MainMenu {
 
         Customer userCharles = new Customer("charles", "charles");
         userCharles.addAccount(new BankAccount("Charles' account"));
-        userCharles.addAccount(new BankAccount("Charles' savings account"));
+        userCharles.addAccount(new BankAccount("Charles' savings account", AccountType.SAVINGS));
         userCharles.getAccounts().get(0).deposit(40);
         userCharles.getAccounts().get(1).deposit(10000);
         users.add(userCharles);
@@ -69,7 +69,8 @@ public class MainMenu {
         System.out.println("11. Print bank statement");
         System.out.println("12. Set category spending limit");
         System.out.println("13. View the largest transactions");
-        System.out.println("14. Exit the app");
+        System.out.println("14. Mark favorite or primary account");
+        System.out.println("15. Exit the app");
         System.out.println();
     }
 
@@ -146,8 +147,11 @@ public class MainMenu {
             case 13:
                 performViewLargestTransactions();
                 break;
+            
+          case 14:
+            performMarkQuickAccessAccount();
 
-            case 14:
+            case 15:
                 System.out.println("Thank you for using the 237 Bank App!");
                 System.exit(0);
                 break;
@@ -212,8 +216,13 @@ public class MainMenu {
 
     public void performCheckBalance() {
         int account = selectAccount();
-        System.out.println(
-                "Your current balance is: $ " + users.get(currentUserIndex).getAccounts().get(account).getBalance());
+        double balance = users.get(currentUserIndex).getAccounts().get(account).getBalance();
+
+        System.out.printf("Your current balance is: $%.2f%n", balance);
+
+        if (balance < 5.00) {
+            System.out.println("LOW BALANCE");
+        }
 
         System.out.println();
     }
@@ -230,6 +239,7 @@ public class MainMenu {
         Customer newUser = new Customer(accountName, accountPassword);
 
         // add a bank account for them
+        // creates a default checking account 
         newUser.addAccount(new BankAccount(accountName));
 
         users.add(newUser);
@@ -243,7 +253,11 @@ public class MainMenu {
         System.out.println("Enter name for the new account");
         String accountName = keyboardInput.next();
 
-        users.get(currentUserIndex).addAccount(new BankAccount(accountName));
+        System.out.println("Checking or Savings? [1/2]");
+        int accountTypeSelection = getUserSelection(2);
+        AccountType accountType = accountTypeSelection == 1 ? AccountType.CHECKING : AccountType.SAVINGS;
+
+        users.get(currentUserIndex).addAccount(new BankAccount(accountName, accountType));
 
         System.out.println("New account created with the name: " + accountName + "\n");
     }
@@ -292,6 +306,20 @@ public class MainMenu {
         double remaining = limit - alreadySpent;
         System.out.println("Withdrawal blocked! Your spending limit for category \"" + category + "\" is $" + limit);
         System.out.println("You spent $" + alreadySpent + " and have $" + remaining + " remaining for this category.\n");
+        String category = selectCategory();
+        boolean withdrawResult = users.get(currentUserIndex).getAccounts().get(account).withdraw(withdrawAmount, category); // withdraw it from the selected account only for now
+        if (withdrawResult) {
+            double balance = selectedAccount.getBalance();
+
+            System.out.println("Withdrawal successful. Withdrew $ " + withdrawAmount + " | Category: " + category + "\n");
+            System.out.printf("Your current balance is: $%.2f%n", balance);
+            if (balance < 5.00) {
+                System.out.println("LOW BALANCE");
+            }
+            System.out.println();
+        } else {
+            System.out.println("Withdrawal failed.\n");
+        }
     }
 
     public void performTransfer() {
@@ -336,6 +364,32 @@ public class MainMenu {
         System.out.println();
     }
 
+    public void performMarkQuickAccessAccount() {
+        Customer currentUser = users.get(currentUserIndex);
+        int accountIndex = selectAccount();
+        BankAccount selectedAccount = currentUser.getAccounts().get(accountIndex);
+
+        System.out.println("1. Mark as favorite");
+        System.out.println("2. Remove favorite");
+        System.out.println("3. Set as primary");
+        int selection = getUserSelection(3);
+
+        switch (selection) {
+            case 1:
+                currentUser.markFavoriteAccount(selectedAccount);
+                System.out.println("Account marked as favorite.\n");
+                break;
+            case 2:
+                currentUser.unmarkFavoriteAccount(selectedAccount);
+                System.out.println("Account removed from favorites.\n");
+                break;
+            case 3:
+                currentUser.setPrimaryAccount(selectedAccount);
+                System.out.println("Account set as primary.\n");
+                break;
+        }
+    }
+
     // for all accounts in system
     private BankAccount selectAnyAccount() {
         System.out.println("Select destination account:");
@@ -363,21 +417,59 @@ public class MainMenu {
 
     // for one's own accounts
     private int selectAccount() {
+        Customer currentUser = users.get(currentUserIndex);
+        List<BankAccount> accounts = currentUser.getAccounts();
+        List<Integer> accountIndexes = new ArrayList<>();
+
         System.out.println("Select an account: ");
 
-        for (int i = 0; i < users.get(currentUserIndex).getAccounts().size(); i++) {
-            System.out.println((i + 1) + ". " + users.get(currentUserIndex).getAccounts().get(i).getAccountName());
+        BankAccount primaryAccount = currentUser.getPrimaryAccount();
+        if (primaryAccount != null) {
+            int primaryIndex = accounts.indexOf(primaryAccount);
+            if (primaryIndex >= 0) {
+                accountIndexes.add(primaryIndex);
+                System.out.println(accountIndexes.size() + ". " + getAccountDisplayName(currentUser, primaryAccount));
+            }
+        }
+
+        for (BankAccount favoriteAccount : currentUser.getFavoriteAccounts()) {
+            int favoriteIndex = accounts.indexOf(favoriteAccount);
+            if (favoriteIndex >= 0 && favoriteAccount != primaryAccount) {
+                accountIndexes.add(favoriteIndex);
+                System.out.println(accountIndexes.size() + ". " + getAccountDisplayName(currentUser, favoriteAccount));
+            }
+        }
+
+        for (int i = 0; i < accounts.size(); i++) {
+            if (!accountIndexes.contains(i)) {
+                accountIndexes.add(i);
+                System.out.println(accountIndexes.size() + ". " + getAccountDisplayName(currentUser, accounts.get(i)));
+            }
         }
 
         System.out.println();
 
         int accountSelection = -1;
-        while (accountSelection < 1 || accountSelection > users.get(currentUserIndex).getAccounts().size()) {
+        while (accountSelection < 1 || accountSelection > accountIndexes.size()) {
             System.out.print("Please select an account: ");
             accountSelection = keyboardInput.nextInt();
         }
 
-        return accountSelection - 1;
+        return accountIndexes.get(accountSelection - 1);
+    }
+
+    private String getAccountDisplayName(Customer customer, BankAccount account) {
+        String displayName = account.getAccountName();
+
+        if (customer.isPrimaryAccount(account)) {
+            displayName += " [PRIMARY]";
+        }
+
+        if (customer.isFavoriteAccount(account)) {
+            displayName += " [FAVORITE]";
+        }
+
+        return displayName;
     }
 
     public void displayAdminOptions() {
