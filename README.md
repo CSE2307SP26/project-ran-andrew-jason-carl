@@ -31,6 +31,10 @@
 17. A bank administrator should be able to unfreeze a previously frozen account, restoring all capabilities.
 18. A bank administrator should be able to view all customer accounts and balances across the entire system.
 
+-- new since for iteration 3 --
+  
+19. A bank customer will be notify if an account has a low balance (<5.00)
+
 
 # User stories completed this iteration
 1. Users should be able to add password to their accounts and change passwords
