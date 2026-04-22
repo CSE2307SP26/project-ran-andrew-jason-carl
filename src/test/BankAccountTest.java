@@ -2,11 +2,12 @@ package test;
 
 import main.BankAccount;
 import main.Customer;
+import main.AccountType;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 public class BankAccountTest {
 
@@ -24,14 +25,14 @@ public class BankAccountTest {
             testAccount.deposit(-50);
             fail();
         } catch (IllegalArgumentException e) {
-            //do nothing, test passes
+            // do nothing, test passes
         }
 
         try {
             testAccount.deposit(0);
             fail();
         } catch (IllegalArgumentException e) {
-            //do nothing, test passes
+            // do nothing, test passes
         }
     }
 
@@ -40,33 +41,34 @@ public class BankAccountTest {
         BankAccount testAccount = new BankAccount();
         testAccount.deposit(50);
         testAccount.deposit(25);
-        assertEquals("Deposit: 50.0 | Category: No category\nDeposit: 25.0 | Category: No category\n", testAccount.getTransactionHistory());
+        assertEquals("Deposit: 50.0 | Category: No category\nDeposit: 25.0 | Category: No category\n",
+                testAccount.getTransactionHistory());
 
         BankAccount account3 = new BankAccount();
         account3.deposit(100);
         account3.deposit(200);
-        assertEquals("Deposit: 100.0 | Category: No category\nDeposit: 200.0 | Category: No category\n", account3.getTransactionHistory());
-        
+        assertEquals("Deposit: 100.0 | Category: No category\nDeposit: 200.0 | Category: No category\n",
+                account3.getTransactionHistory());
 
-        // test empty account 
+        // test empty account
         BankAccount account4 = new BankAccount();
         assertEquals("There are no transactions yet.\n\n", account4.getTransactionHistory());
     }
 
-    @Test 
+    @Test
     public void testCloseAccount() {
         BankAccount testAccount = new BankAccount();
         testAccount.deposit(50);
         assertEquals(false, testAccount.closeAccount());
-        
+
         BankAccount account2 = new BankAccount();
         assertEquals(true, account2.closeAccount());
 
-        // test closed account 
+        // test closed account
         assertEquals(0.0, account2.getBalance(), 0.01);
     }
-    
-    //test transferTo works successfully
+
+    // test transferTo works successfully
     @Test
     public void testTransferTo() {
         BankAccount accountA = new BankAccount();
@@ -76,14 +78,15 @@ public class BankAccountTest {
         assertEquals(60, accountA.getBalance(), 0.01);
         assertEquals(40, accountB.getBalance(), 0.01);
     }
-    //test if it catches transfering more money than the owner has 
+
+    // test if it catches transfering more money than the owner has
     @Test
     public void testInvalidTransferTo_one() {
         BankAccount accountA = new BankAccount();
         BankAccount accountB = new BankAccount();
-        
+
         accountA.deposit(50);
-        
+
         try {
             // Trying to transfer more than the balance of 50
             accountA.transferTo(accountB, 60);
@@ -92,14 +95,15 @@ public class BankAccountTest {
             // do nothing, test passes
         }
     }
-    //test if it catches transferring a invalid amount
+
+    // test if it catches transferring a invalid amount
     @Test
     public void testInvalidTransferTo_two() {
         BankAccount accountA = new BankAccount();
         BankAccount accountB = new BankAccount();
-        
+
         accountA.deposit(50);
-        
+
         try {
             accountA.transferTo(accountB, -20);
             fail();
@@ -107,12 +111,13 @@ public class BankAccountTest {
             // do nothing, test passes
         }
     }
-    //test if it catches transferring to an invalid account
+
+    // test if it catches transferring to an invalid account
     @Test
     public void testInvalidTransferTo_three() {
         BankAccount accountA = new BankAccount();
         accountA.deposit(50);
-        
+
         try {
             // Passing null instead of a valid target account
             accountA.transferTo(null, 20);
@@ -121,12 +126,13 @@ public class BankAccountTest {
             // do nothing, test passes
         }
     }
-    //test if it catches transferring to the same bank account
+
+    // test if it catches transferring to the same bank account
     @Test
-    public void testInvalidTransferTo_four(){
+    public void testInvalidTransferTo_four() {
         BankAccount accountA = new BankAccount();
         accountA.deposit(50);
-        
+
         try {
             // Trying to transfer to itself
             accountA.transferTo(accountA, 20);
@@ -135,62 +141,63 @@ public class BankAccountTest {
             // do nothing, test passes
         }
     }
-  
-    //test if withdraw works
+
+    // test if withdraw works
     @Test
-    public void testWithdraw(){
+    public void testWithdraw() {
         BankAccount testAccount = new BankAccount();
         testAccount.deposit(50);
         testAccount.withdraw(30);
         assertEquals(20, testAccount.getBalance(), 0.01);
     }
-    
-    //test if it catches negative withdraw
+
+    // test if it catches negative withdraw
     @Test
-    public void testInvalidWithdraw_one(){
+    public void testInvalidWithdraw_one() {
         BankAccount testAccount = new BankAccount();
         testAccount.deposit(50);
-         try {
+        try {
             testAccount.withdraw(-50);
             fail();
         } catch (IllegalArgumentException e) {
-            //do nothing, test passes
+            // do nothing, test passes
         }
     }
-    //test if it catches user withdrawing more than their deposit
+
+    // test if it catches user withdrawing more than their deposit
     @Test
-    public void testInvalidWithdraw_two(){
+    public void testInvalidWithdraw_two() {
         BankAccount testAccount = new BankAccount();
         testAccount.deposit(50);
-         try {
+        try {
             testAccount.withdraw(60);
             fail();
         } catch (IllegalArgumentException e) {
-            //do nothing, test passes
+            // do nothing, test passes
         }
     }
 
     @Test
-    public void testGetBalance(){
+    public void testGetBalance() {
         BankAccount testAccount = new BankAccount();
         assertEquals(0, testAccount.getBalance(), 0.01);
     }
 
-    @Test 
-    public void testGetBalanceAfterDeposit(){
+    @Test
+    public void testGetBalanceAfterDeposit() {
         BankAccount testAccount = new BankAccount();
         testAccount.deposit(100);
         assertEquals(100, testAccount.getBalance(), 0.01);
     }
 
     @Test
-    public void testStartWithNoAccounts(){
+    public void testStartWithNoAccounts() {
         Customer customer = new Customer("test");
         assertEquals(0, customer.getAccounts().size());
     }
 
     @Test
-    public void testMultipleAccounts(){
+    public void testMultipleAccounts() {
         Customer customer = new Customer("test");
         customer.addAccount(new BankAccount());
         customer.addAccount(new BankAccount());
@@ -198,14 +205,14 @@ public class BankAccountTest {
     }
 
     @Test
-    public void testRenameAccount(){
+    public void testRenameAccount() {
         BankAccount testAccount = new BankAccount("Old");
         testAccount.setAccountName("New Name");
         assertEquals("New Name", testAccount.getAccountName());
     }
 
     @Test
-    public void testInvalieAccountName(){
+    public void testInvalieAccountName() {
         BankAccount testAccount = new BankAccount("Old");
         try {
             testAccount.setAccountName("");
@@ -221,55 +228,57 @@ public class BankAccountTest {
         }
     }
 
-    @Test 
-    //test that renaming account does not change balance
-    public void testNewAccountBalance(){
+    @Test
+    // test that renaming account does not change balance
+    public void testNewAccountBalance() {
         BankAccount testAccount = new BankAccount("Old");
         testAccount.deposit(50);
         testAccount.setAccountName("New Name");
         assertEquals(50, testAccount.getBalance(), 0.01);
     }
 
-    @Test 
-    public void testDepositWithNoCategory(){
+    @Test
+    public void testDepositWithNoCategory() {
         BankAccount testAccount = new BankAccount();
         testAccount.deposit(50);
         assertEquals("Deposit: 50.0 | Category: No category\n", testAccount.getTransactionHistory());
     }
 
-    @Test 
-    public void testDepositWithCategory(){
+    @Test
+    public void testDepositWithCategory() {
         BankAccount testAccount = new BankAccount();
         testAccount.deposit(50, "Food");
         assertEquals("Deposit: 50.0 | Category: Food\n", testAccount.getTransactionHistory());
     }
 
-    @Test 
-    public void testWithdrawWithNoCategory(){
+    @Test
+    public void testWithdrawWithNoCategory() {
         BankAccount testAccount = new BankAccount();
         testAccount.deposit(50);
         testAccount.withdraw(30);
-        assertEquals("Deposit: 50.0 | Category: No category\nWithdrawal: 30.0 | Category: No category\n", testAccount.getTransactionHistory());
+        assertEquals("Deposit: 50.0 | Category: No category\nWithdrawal: 30.0 | Category: No category\n",
+                testAccount.getTransactionHistory());
     }
 
     @Test
-    public void testWithdrawWithCategory(){
+    public void testWithdrawWithCategory() {
         BankAccount testAccount = new BankAccount();
         testAccount.deposit(50);
         testAccount.withdraw(30, "Entertainment");
-        assertEquals("Deposit: 50.0 | Category: No category\nWithdrawal: 30.0 | Category: Entertainment\n", testAccount.getTransactionHistory());
+        assertEquals("Deposit: 50.0 | Category: No category\nWithdrawal: 30.0 | Category: Entertainment\n",
+                testAccount.getTransactionHistory());
     }
 
-    @Test 
-    public void testAddCategory(){
+    @Test
+    public void testAddCategory() {
         Customer testCustomer = new Customer("test");
         testCustomer.addCategory("Insurance");
         assertEquals(6, testCustomer.getCategories().size());
         assertEquals("Insurance", testCustomer.getCategories().get(5));
     }
 
-    @Test 
-    public void testAddInvalidCategory(){
+    @Test
+    public void testAddInvalidCategory() {
         Customer testCustomer = new Customer("test");
         try {
             testCustomer.addCategory("");
@@ -284,5 +293,51 @@ public class BankAccountTest {
             // do nothing, test passes
         }
     }
-}
 
+    @Test
+    public void testMakeCheckingsAccount() {
+        BankAccount checkingAccount = new BankAccount("Checking Account", AccountType.CHECKING);
+        assertEquals(AccountType.CHECKING, checkingAccount.getAccountType());
+    }
+
+    @Test
+    public void testMakeSavingsAccount() {
+        BankAccount savingsAccount = new BankAccount("Savings Account", AccountType.SAVINGS);
+        assertEquals(AccountType.SAVINGS, savingsAccount.getAccountType());
+    }
+
+    // default bank account type should be checking
+    @Test
+    public void testCreateDefaultAccount() {
+        BankAccount defaultAccount = new BankAccount();
+        assertEquals(AccountType.CHECKING, defaultAccount.getAccountType());
+    }
+
+    @Test
+    public void testSavingsAccountMinimumBalance() {
+        BankAccount savingsAccount = new BankAccount("Savings Account", AccountType.SAVINGS);
+        savingsAccount.deposit(1500);
+        boolean withdrawResult = savingsAccount.withdraw(400);
+        assertEquals(true, withdrawResult);
+        assertEquals(1100, savingsAccount.getBalance(), 0.01);
+
+        // then withdraw over the limit 
+        withdrawResult = savingsAccount.withdraw(600);
+        assertEquals(false, withdrawResult);
+    }
+
+    @Test
+    public void testSavingsAccountWithdrawalFee() {
+        BankAccount savingsAccount = new BankAccount("Savings Account", AccountType.SAVINGS);
+        savingsAccount.deposit(1500);
+        // make 6 withdrawals to exceed the fee free limit
+        for (int i = 0; i < 6; i++) {
+            savingsAccount.withdraw(10);
+        }
+        // should deduct 2.5 additional fee on top of withdrawal 
+        boolean withdrawResult = savingsAccount.withdraw(10);
+        assertEquals(true, withdrawResult);
+        assertEquals(1427.5, savingsAccount.getBalance(), 0.01);
+    }
+
+}

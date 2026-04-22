@@ -29,7 +29,7 @@ public class MainMenu {
 
         Customer userCharles = new Customer("Charles", "charles");
         userCharles.addAccount(new BankAccount("Charles' account"));
-        userCharles.addAccount(new BankAccount("Charles' savings account"));
+        userCharles.addAccount(new BankAccount("Charles' savings account", AccountType.SAVINGS));
         userCharles.getAccounts().get(0).deposit(40);
         userCharles.getAccounts().get(1).deposit(10000);
         users.add(userCharles);
@@ -214,6 +214,7 @@ public class MainMenu {
         Customer newUser = new Customer(accountName, accountPassword);
 
         // add a bank account for them
+        // creates a default checking account 
         newUser.addAccount(new BankAccount(accountName));
 
         users.add(newUser);
@@ -227,7 +228,11 @@ public class MainMenu {
         System.out.println("Enter name for the new account");
         String accountName = keyboardInput.next();
 
-        users.get(currentUserIndex).addAccount(new BankAccount(accountName));
+        System.out.println("Checking or Savings? [1/2]");
+        int accountTypeSelection = getUserSelection(2);
+        AccountType accountType = accountTypeSelection == 1 ? AccountType.CHECKING : AccountType.SAVINGS;
+
+        users.get(currentUserIndex).addAccount(new BankAccount(accountName, accountType));
 
         System.out.println("New account created with the name: " + accountName + "\n");
     }
@@ -250,8 +255,12 @@ public class MainMenu {
             withdrawAmount = keyboardInput.nextInt();
         }
         String category = selectCategory();
-        users.get(currentUserIndex).getAccounts().get(account).withdraw(withdrawAmount, category); // withdraw it from the selected account only for now
-        System.out.println("Withdrawal successful. Withdrew $ " + withdrawAmount + " | Category: " + category + "\n");
+        boolean withdrawResult = users.get(currentUserIndex).getAccounts().get(account).withdraw(withdrawAmount, category); // withdraw it from the selected account only for now
+        if (withdrawResult) {
+            System.out.println("Withdrawal successful. Withdrew $ " + withdrawAmount + " | Category: " + category + "\n");
+        } else {
+            System.out.println("Withdrawal failed.\n");
+        }
     }
 
     public void performTransfer() {
