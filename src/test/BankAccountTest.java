@@ -7,6 +7,12 @@ import main.AccountType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import org.junit.Test;
 
 public class BankAccountTest {
@@ -340,4 +346,86 @@ public class BankAccountTest {
         assertEquals(1427.5, savingsAccount.getBalance(), 0.01);
     }
 
+    @Test
+    public void testGenerateBankStatementExists() throws Exception {
+        BankAccount testAccount = new BankAccount();
+        Path statementPath = testAccount.generateBankStatement("testUser");
+        assert (Files.exists(statementPath));
+    }
+
+    @Test
+    public void testGenerateBankStatementBlank() throws Exception {
+        BankAccount testAccount = new BankAccount();
+        Path statementPath = testAccount.generateBankStatement("testUser");
+
+        // get today's time
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        String formattedDate = today.format(formatter);
+
+        // compile expected string with today's date
+        StringBuilder expected = new StringBuilder();
+        expected.append("Bank Statement\n");
+        expected.append("Date: " + formattedDate + "\n");
+        expected.append("Account Name: default\n");
+        expected.append("Current Balance: 0.0\n");
+        expected.append("Transaction History:\n");
+        expected.append("There are no transactions yet.");
+        expected.append("\n");
+
+        assertEquals(expected.toString(), Files.readString(statementPath));
+    }
+
+    @Test
+    public void testGenerateBankStatementwithTransactions() throws Exception {
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(100, "Salary");
+        testAccount.withdraw(30, "Groceries");
+        Path statementPath = testAccount.generateBankStatement("testUser");
+
+        // get today's time
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        String formattedDate = today.format(formatter);
+
+        // compile expected string with today's date and transactions
+        StringBuilder expected = new StringBuilder();
+        expected.append("Bank Statement\n");
+        expected.append("Date: " + formattedDate + "\n");
+        expected.append("Account Name: default\n");
+        expected.append("Current Balance: 70.0\n");
+        expected.append("Transaction History:\n");
+        expected.append("Deposit: 100.0 | Category: Salary\nWithdrawal: 30.0 | Category: Groceries\n");
+
+        // check file exists
+        assert (Files.exists(statementPath));
+
+        // check content
+        assertEquals(expected.toString(), Files.readString(statementPath));
+    }
+
+    @Test
+    public void testGenerateBankStatementFileName() throws Exception {
+        BankAccount testAccount = new BankAccount();
+        Path statementPath = testAccount.generateBankStatement("testUser");
+
+        // get today's time
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+        String formattedDate = today.format(formatter);
+
+        StringBuilder expectedFileName = new StringBuilder();
+        expectedFileName.append("bank_statement_");
+        expectedFileName.append(formattedDate);
+        expectedFileName.append("_");
+        expectedFileName.append("testUser");
+        expectedFileName.append("_");
+        expectedFileName.append(testAccount.getAccountName());
+        expectedFileName.append(".txt");
+
+        assertEquals(expectedFileName.toString(), statementPath.getFileName().toString());
+    }
 }
