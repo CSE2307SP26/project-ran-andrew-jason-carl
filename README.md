@@ -34,6 +34,8 @@
 -- new since for iteration 3 --
   
 19. A bank customer will be notify if an account has a low balance (<5.00)
+20. A bank customer should be able to view their largest transactions by category and as a whole.
+21. A bank customer should be able to set a limit per category.
 
 
 # User stories completed this iteration
@@ -46,6 +48,10 @@
 7. A bank administrator should be able to freeze an account, blocking all transactions while preserving the balance.
 8. A bank administrator should be able to unfreeze a previously frozen account, restoring all capabilities.
 9. A bank administrator should be able to view all customer accounts and balances across the entire system.
+
+1.  A bank customer will be notify if an account has a low balance (<5.00)
+2.  A bank customer should be able to view their largest transactions by category and as a whole.
+3.  A bank customer should be able to set a limit per category.
 
 # User stories we intend to complete next iteration 
 1. Users will be able to create different types accounts (savings, checking) (carl)
