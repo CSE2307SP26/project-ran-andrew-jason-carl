@@ -21,12 +21,12 @@
 
 -- new since April 8th--
 
-10. Users should be able to add password to their accounts and change passwords
-11. Users should be able to switch user accounts to log in depending on what type of user they are (regular user, bank admin)
-12. A customer can view all of their accounts with their names and balance
-13. A user need to enter password before confirming the withdrawal
-14. Users should be able to rename an existing account
-15. Users should be able to add a memo to each deposit/withdrawal they make by selecting or adding a new category
+10. A bank customer should be able to add password to their accounts and change passwords
+11. A bank customer should be able to switch user accounts to log in depending on what type of user they are (regular user, bank admin)
+12. A bank customer can view all of their accounts with their names and balance
+13. A bank customer need to enter password before confirming the withdrawal
+14. A bank customer should be able to rename an existing account
+15. A bank customer should be able to add a memo to each deposit/withdrawal they make by selecting or adding a new category
 16. A bank administrator should be able to freeze an account, blocking all transactions while preserving the balance.
 17. A bank administrator should be able to unfreeze a previously frozen account, restoring all capabilities.
 18. A bank administrator should be able to view all customer accounts and balances across the entire system.
