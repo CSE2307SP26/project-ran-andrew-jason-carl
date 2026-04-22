@@ -32,7 +32,7 @@ public class ShowAccountTest {
             System.setOut(originalOut);
         }
 
-        assertEquals("Checking: 125.5 | TYPE: CHECKING\n\nSavings: 900.0 | TYPE: CHECKING\n\n", output.toString());
+        assertEquals("Checking: $125.50 | TYPE: CHECKING\n\nSavings: $900.00 | TYPE: CHECKING\n\n", output.toString());
     }
 
     @Test
@@ -50,5 +50,26 @@ public class ShowAccountTest {
         }
 
         assertEquals("", output.toString());
+    }
+
+    @Test
+    public void testShowAccountsMarksLowBalance() {
+        Customer customer = new Customer("low-balance-user");
+
+        BankAccount checking = new BankAccount("Checking");
+        checking.deposit(4.99);
+        customer.addAccount(checking);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(output));
+
+        try {
+            customer.showAccounts();
+        } finally {
+            System.setOut(originalOut);
+        }
+
+        assertEquals("Checking: $4.99 | LOW BALANCE | TYPE: CHECKING\n\n", output.toString());
     }
 }

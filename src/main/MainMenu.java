@@ -202,8 +202,13 @@ public class MainMenu {
 
     public void performCheckBalance() {
         int account = selectAccount();
-        System.out.println(
-                "Your current balance is: $ " + users.get(currentUserIndex).getAccounts().get(account).getBalance());
+        double balance = users.get(currentUserIndex).getAccounts().get(account).getBalance();
+
+        System.out.printf("Your current balance is: $%.2f%n", balance);
+
+        if (balance < 5.00) {
+            System.out.println("LOW BALANCE");
+        }
 
         System.out.println();
     }
@@ -263,7 +268,14 @@ public class MainMenu {
         String category = selectCategory();
         boolean withdrawResult = users.get(currentUserIndex).getAccounts().get(account).withdraw(withdrawAmount, category); // withdraw it from the selected account only for now
         if (withdrawResult) {
+            double balance = selectedAccount.getBalance();
+
             System.out.println("Withdrawal successful. Withdrew $ " + withdrawAmount + " | Category: " + category + "\n");
+            System.out.printf("Your current balance is: $%.2f%n", balance);
+            if (balance < 5.00) {
+                System.out.println("LOW BALANCE");
+            }
+            System.out.println();
         } else {
             System.out.println("Withdrawal failed.\n");
         }
