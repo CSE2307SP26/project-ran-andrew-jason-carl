@@ -32,7 +32,7 @@ public class ShowAccountTest {
             System.setOut(originalOut);
         }
 
-        assertEquals("Checking: 125.5\nSavings: 900.0\n", output.toString());
+        assertEquals("Checking: 125.5 | TYPE: CHECKING\n\nSavings: 900.0 | TYPE: CHECKING\n\n", output.toString());
     }
 
     @Test

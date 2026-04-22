@@ -29,7 +29,7 @@ public class Customer extends User {
 
     public void showAccounts() {
         for (BankAccount account : accounts) {
-            System.out.println(account.getAccountName() + ": " + account.getBalance() + " | TYPE: " + account.getAccountType());
+            System.out.println(account.getAccountName() + ": " + account.getBalance() + " | TYPE: " + account.getAccountType() + "\n");
         }
     }
     
