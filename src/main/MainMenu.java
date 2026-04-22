@@ -149,7 +149,8 @@ public class MainMenu {
                 break;
             
           case 14:
-            performMarkQuickAccessAccount();
+                performMarkQuickAccessAccount();
+                break;
 
             case 15:
                 System.out.println("Thank you for using the 237 Bank App!");
@@ -306,20 +307,6 @@ public class MainMenu {
         double remaining = limit - alreadySpent;
         System.out.println("Withdrawal blocked! Your spending limit for category \"" + category + "\" is $" + limit);
         System.out.println("You spent $" + alreadySpent + " and have $" + remaining + " remaining for this category.\n");
-        String category = selectCategory();
-        boolean withdrawResult = users.get(currentUserIndex).getAccounts().get(account).withdraw(withdrawAmount, category); // withdraw it from the selected account only for now
-        if (withdrawResult) {
-            double balance = selectedAccount.getBalance();
-
-            System.out.println("Withdrawal successful. Withdrew $ " + withdrawAmount + " | Category: " + category + "\n");
-            System.out.printf("Your current balance is: $%.2f%n", balance);
-            if (balance < 5.00) {
-                System.out.println("LOW BALANCE");
-            }
-            System.out.println();
-        } else {
-            System.out.println("Withdrawal failed.\n");
-        }
     }
 
     public void performTransfer() {

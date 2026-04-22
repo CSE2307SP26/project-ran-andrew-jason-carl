@@ -220,17 +220,8 @@ public class BankAccount {
             System.out.println("Account is closed or frozen. No transactions can be made.");
             return false;
         }
-        if(amount > 0 && amount <= curr){
-            this.balance -= amount;
-            categorySpending.merge(category, amount, Double::sum);
-            this.transactionHistory.add("Withdrawal: " + amount + " | Category: " + category);
-        } else {
-            throw new IllegalArgumentException();
 
         if (amount > balance) {
-            if (accountType == AccountType.SAVINGS) {
-                return false;
-            }
             throw new IllegalArgumentException("Insufficient funds");
         }
 
@@ -253,9 +244,9 @@ public class BankAccount {
             savingsWithdrawalCount++;
         }
 
-        balance -= amount;
-        transactionHistory.add("Withdrawal: " + amount + " | Category: " + category);
-
+        this.balance -= amount;
+        categorySpending.merge(category,amount,Double::sum);
+        this.transactionHistory.add("Withdrawal: " + amount + " | Category: " + category);
         return true;
     }
 

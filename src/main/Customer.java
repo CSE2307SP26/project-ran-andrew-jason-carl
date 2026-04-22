@@ -18,7 +18,7 @@ public class Customer extends User {
         this.categoryLimits = new HashMap<>();
         initializeCategories();
         this.favoriteAccounts = new ArrayList<>();
-        initalizeCategories();
+        initializeCategories();
     }
 
     public Customer(String username, String password) {
@@ -27,7 +27,7 @@ public class Customer extends User {
         this.categoryLimits = new HashMap<>();
         initializeCategories();
         this.favoriteAccounts = new ArrayList<>();
-        initalizeCategories();
+        initializeCategories();
     }
 
     public void addAccount(BankAccount account) {
@@ -170,5 +170,4 @@ public class Customer extends User {
     public Map<String, Double> getAllCategoryLimits() {
         return categoryLimits;
     }
-}
 }
