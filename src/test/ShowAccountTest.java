@@ -72,4 +72,33 @@ public class ShowAccountTest {
 
         assertEquals("Checking: $4.99 | LOW BALANCE | TYPE: CHECKING\n\n", output.toString());
     }
+
+    @Test
+    public void testShowAccountsMarksPrimaryAndFavoriteAccounts() {
+        Customer customer = new Customer("quick-access-user");
+
+        BankAccount checking = new BankAccount("Checking");
+        checking.deposit(125.50);
+        customer.addAccount(checking);
+
+        BankAccount savings = new BankAccount("Savings");
+        savings.deposit(900);
+        customer.addAccount(savings);
+
+        customer.setPrimaryAccount(checking);
+        customer.markFavoriteAccount(savings);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(output));
+
+        try {
+            customer.showAccounts();
+        } finally {
+            System.setOut(originalOut);
+        }
+
+        assertEquals("Checking: $125.50 | PRIMARY | TYPE: CHECKING\n\n"
+                + "Savings: $900.00 | FAVORITE | TYPE: CHECKING\n\n", output.toString());
+    }
 }
