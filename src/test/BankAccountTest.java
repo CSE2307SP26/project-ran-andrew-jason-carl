@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -381,4 +382,42 @@ public class BankAccountTest {
 
         assertEquals(expectedFileName.toString(), statementPath.getFileName().toString());
     }
+
+    @Test
+    public void testGetTopFiveTransactions(){
+        BankAccount account = new BankAccount();
+        account.deposit(100, "Food");
+        account.deposit(30, "Utilities");
+        account.deposit(20, "Other");
+        account.withdraw(10,"Food");
+        account.withdraw(5,"Utilities");
+        List<String> topTransactions = account.getTopFiveTransactions();
+        assertEquals(5, topTransactions.size());
+        assertEquals("Deposit: 100.0 | Category: Food", topTransactions.get(0));
+        assertEquals("Deposit: 30.0 | Category: Utilities", topTransactions.get(1));
+        assertEquals("Deposit: 20.0 | Category: Other", topTransactions.get(2));
+    }
+
+    @Test
+    public void testTopTransactionsLessThanFive(){
+        BankAccount account = new BankAccount();
+        account.deposit(100, "Food");
+        account.withdraw(10,"Other");
+        List<String> topTransactions = account.getTopFiveTransactions();
+        assertEquals(2, topTransactions.size());
+        assertEquals("Deposit: 100.0 | Category: Food", topTransactions.get(0));
+        assertEquals("Withdrawal: 10.0 | Category: Other", topTransactions.get(1));
+    }
+
+    @Test
+    public void testGetTopFiveTransactionsByCategory(){
+        BankAccount account = new BankAccount();
+        account.deposit(500);
+        account.deposit(100,"Transportation");
+        account.withdraw(30, "Food");
+        assertEquals("Withdrawal: 30.0 | Category: Food", account.getLargestTransactionByCategory("Food"));
+        assertEquals("There are no transactions in the category: Utilities", account.getLargestTransactionByCategory("Utilities"));
+    }
+
+
 }

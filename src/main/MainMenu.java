@@ -7,8 +7,8 @@ import java.util.Scanner;
 
 public class MainMenu {
 
-    private static final int EXIT_SELECTION = 12;
-    private static final int MAX_SELECTION = 12;
+    private static final int EXIT_SELECTION = 14;
+    private static final int MAX_SELECTION = 14;
     private static final int ACCOUNT_OPTIONS_MAX_SELECTION = 4;  // added admin login option
     private static final int ADMIN_OPTIONS_MAX_SELECTION = 5;
 
@@ -67,7 +67,9 @@ public class MainMenu {
         System.out.println("9. Show Accounts");
         System.out.println("10. Change account name");
         System.out.println("11. Print bank statement");
-        System.out.println("12. Exit the app");
+        System.out.println("12. Set category spending limit");
+        System.out.println("13. View the largest transactions");
+        System.out.println("14. Exit the app");
         System.out.println();
     }
 
@@ -128,7 +130,7 @@ public class MainMenu {
             case 9:
                 performShowAccounts();
                 break;
-            
+
             case 10: 
               performRenameAccount();
               break;
@@ -137,7 +139,15 @@ public class MainMenu {
                 performGenerateBankStatement();
                 break;
             
-            case 12:
+            case 12: 
+                performSetCategoryLimit();
+                break;
+
+            case 13:
+                performViewLargestTransactions();
+                break;
+
+            case 14:
                 System.out.println("Thank you for using the 237 Bank App!");
                 System.exit(0);
                 break;
@@ -250,14 +260,38 @@ public class MainMenu {
             return;
         }
 
+        String category = selectCategory();
+        double withdrawAmount = getValidWithdrawAmount(selectedAccount, users.get(currentUserIndex), category);
+        if (withdrawAmount == 0) {
+            System.out.println("Withdrawal cancelled.\n\n");
+            return;
+        }
+        selectedAccount.withdraw(withdrawAmount,category);
+        System.out.println("Withdrawal successful. Withdrew $ " + withdrawAmount + " | Category: " + category + "\n");
+    }
+
+    private double getValidWithdrawAmount(BankAccount account, Customer customer, String category) {
         double withdrawAmount = -1;
-        while (withdrawAmount <= 0 || withdrawAmount > selectedAccount.getBalance()) {
+        while (true) {
             System.out.print("How much would you like to withdraw: ");
             withdrawAmount = keyboardInput.nextDouble();
+            if (withdrawAmount ==0) return 0;
+            if (withdrawAmount < 0 || withdrawAmount > account.getBalance()) {
+            System.out.println("Please try again.");
+            } else if (account.wouldExceedLimit(customer, withdrawAmount, category)){
+                printLimitExceededMessage(account, customer, category);
+            } else {
+                return withdrawAmount;
+            }
         }
-        String category = selectCategory();
-        users.get(currentUserIndex).getAccounts().get(account).withdraw(withdrawAmount, category); // withdraw it from the selected account only for now
-        System.out.println("Withdrawal successful. Withdrew $ " + withdrawAmount + " | Category: " + category + "\n");
+    }
+
+    private void printLimitExceededMessage(BankAccount account, Customer customer, String category) {
+        Double limit = customer.getCategoryLimit(category);
+        double alreadySpent = account.getCategorySpending(category);
+        double remaining = limit - alreadySpent;
+        System.out.println("Withdrawal blocked! Your spending limit for category \"" + category + "\" is $" + limit);
+        System.out.println("You spent $" + alreadySpent + " and have $" + remaining + " remaining for this category.\n");
     }
 
     public void performTransfer() {
@@ -345,8 +379,6 @@ public class MainMenu {
 
         return accountSelection - 1;
     }
-
-    
 
     public void displayAdminOptions() {
         System.out.println("=== Admin Dashboard ===");
@@ -499,6 +531,31 @@ public class MainMenu {
         Path statementPath = selectedAccount.generateBankStatement(users.get(currentUserIndex).getUsername());
         System.out.println("Bank statement generated at: " + statementPath);
         System.out.println();
+    }
+
+    public void performSetCategoryLimit() {
+        String category = selectCategory();
+        System.out.print("Enter spending limit for category \"" + category + "\": ");
+        double limit = keyboardInput.nextDouble();
+        users.get(currentUserIndex).setCategoryLimit(category, limit);
+        System.out.println("Spending limit set for category \"" + category + "\": $" + limit);
+    }
+
+    public void performViewLargestTransactions(){
+        int account = selectAccount();
+        BankAccount selectedAccount = users.get(currentUserIndex).getAccounts().get(account);
+
+        System.out.println("Top 5 largest transactions are:");
+        List<String> topFive = selectedAccount.getTopFiveTransactions();
+        if(topFive.isEmpty()){
+            System.out.println("No transactions found.");
+        } 
+        for (int i = 0; i <topFive.size(); i++){
+            System.out.println((i+1) + ". " + topFive.get(i));
+        }
+        System.out.println("\nView largest transactions by category? Select a category");
+        String category = selectCategory();
+        System.out.println("Largest transaction for category \"" + category + "\": " + selectedAccount.getLargestTransactionByCategory(category));
     }
 
     public static void main(String[] args) {

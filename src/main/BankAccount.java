@@ -9,6 +9,9 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
 
 public class BankAccount {
 
@@ -18,6 +21,7 @@ public class BankAccount {
     private boolean accountClosed;
     private boolean accountFrozen;
     private double interestRate;
+    private Map<String, Double> categorySpending = new HashMap<>();
 
     public static final double DEFAULT_INTEREST_RATE = 0.05;
 
@@ -170,6 +174,7 @@ public class BankAccount {
         }
         if(amount > 0 && amount <= curr){
             this.balance -= amount;
+            categorySpending.merge(category, amount, Double::sum);
             this.transactionHistory.add("Withdrawal: " + amount + " | Category: " + category);
         } else {
             throw new IllegalArgumentException();
@@ -226,5 +231,68 @@ public class BankAccount {
         return outputPath;
     }
 
+    public boolean wouldExceedLimit(Customer customer, double amount, String category) {
+        Double limit = customer.getCategoryLimit(category);
+        if (limit == null) {
+            return false; 
+        }
+        double currentSpending = categorySpending.getOrDefault(category, 0.0);
+        return (currentSpending + amount) > limit;
+    }
+
+    public double getCategorySpending(String category) {
+        return categorySpending.getOrDefault(category, 0.0);
+    }
+
+    public String getLargestTransaction(){
+        if(transactionHistory.isEmpty()){
+            return "There are no transactions yet.\n\n";
+        }
+        String largest = null;
+        double largestAmount = -1;
+        for (String transaction: transactionHistory){
+            double amount = parseTransactionAmount(transaction);
+            if (amount > largestAmount) {
+                largestAmount = amount;
+                largest = transaction;
+            }
+        }
+        return largest;
+    }
+
+    public String getLargestTransactionByCategory(String category){
+        String largest = null;
+        double largestAmount = -1;
+        for (String transaction: transactionHistory){
+            if (transaction.contains("Category: " + category)) {
+                double amount = parseTransactionAmount(transaction);
+                if (amount > largestAmount) {
+                    largestAmount = amount;
+                    largest = transaction;
+                }
+            }
+        }
+        return largest == null ? "There are no transactions in the category: " + category : largest;
+    }
+
+    private double parseTransactionAmount(String transaction) {
+        try{
+            String[] parts = transaction.split(":");
+            String amountPart = parts[1].split(" ")[0];
+            return Double.parseDouble(amountPart);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    public List<String> getTopFiveTransactions(){
+        if (transactionHistory.isEmpty()){
+            return new ArrayList<>();
+        }
+        List<String> sorted = new ArrayList<>(transactionHistory);
+        sorted.sort((a,b) -> Double.compare(parseTransactionAmount(b), parseTransactionAmount(a)));
+        return sorted.subList(0, Math.min(5, sorted.size()));
+    }
     
+
 }
