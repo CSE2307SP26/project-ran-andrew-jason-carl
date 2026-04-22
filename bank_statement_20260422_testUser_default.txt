@@ -1,0 +1,6 @@
+Bank Statement
+Date: 2026-04-22
+Account Name: default
+Current Balance: 0.0
+Transaction History:
+There are no transactions yet.
