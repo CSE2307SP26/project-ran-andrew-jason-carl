@@ -2,6 +2,7 @@ package test;
 
 import main.BankAccount;
 import main.Customer;
+import main.AccountType;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -297,6 +298,52 @@ public class BankAccountTest {
         } catch (IllegalArgumentException e) {
             // do nothing, test passes
         }
+    }
+
+    @Test
+    public void testMakeCheckingsAccount() {
+        BankAccount checkingAccount = new BankAccount("Checking Account", AccountType.CHECKING);
+        assertEquals(AccountType.CHECKING, checkingAccount.getAccountType());
+    }
+
+    @Test
+    public void testMakeSavingsAccount() {
+        BankAccount savingsAccount = new BankAccount("Savings Account", AccountType.SAVINGS);
+        assertEquals(AccountType.SAVINGS, savingsAccount.getAccountType());
+    }
+
+    // default bank account type should be checking
+    @Test
+    public void testCreateDefaultAccount() {
+        BankAccount defaultAccount = new BankAccount();
+        assertEquals(AccountType.CHECKING, defaultAccount.getAccountType());
+    }
+
+    @Test
+    public void testSavingsAccountMinimumBalance() {
+        BankAccount savingsAccount = new BankAccount("Savings Account", AccountType.SAVINGS);
+        savingsAccount.deposit(1500);
+        boolean withdrawResult = savingsAccount.withdraw(400);
+        assertEquals(true, withdrawResult);
+        assertEquals(1100, savingsAccount.getBalance(), 0.01);
+
+        // then withdraw over the limit 
+        withdrawResult = savingsAccount.withdraw(600);
+        assertEquals(false, withdrawResult);
+    }
+
+    @Test
+    public void testSavingsAccountWithdrawalFee() {
+        BankAccount savingsAccount = new BankAccount("Savings Account", AccountType.SAVINGS);
+        savingsAccount.deposit(1500);
+        // make 6 withdrawals to exceed the fee free limit
+        for (int i = 0; i < 6; i++) {
+            savingsAccount.withdraw(10);
+        }
+        // should deduct 2.5 additional fee on top of withdrawal 
+        boolean withdrawResult = savingsAccount.withdraw(10);
+        assertEquals(true, withdrawResult);
+        assertEquals(1427.5, savingsAccount.getBalance(), 0.01);
     }
 
     @Test
