@@ -1,13 +1,14 @@
 package main;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class MainMenu {
 
-    private static final int EXIT_SELECTION = 11;
-    private static final int MAX_SELECTION = 11;
+    private static final int EXIT_SELECTION = 12;
+    private static final int MAX_SELECTION = 12;
     private static final int ACCOUNT_OPTIONS_MAX_SELECTION = 4;  // added admin login option
     private static final int ADMIN_OPTIONS_MAX_SELECTION = 5;
 
@@ -22,12 +23,12 @@ public class MainMenu {
         this.keyboardInput = new Scanner(System.in);
 
         // pre populate with some other users
-        Customer userMary = new Customer("Mary", "mary");
+        Customer userMary = new Customer("mary", "mary");
         userMary.addAccount(new BankAccount("Mary's account"));
         userMary.getAccounts().get(0).deposit(200); // prepopulate with some money
         users.add(userMary);
 
-        Customer userCharles = new Customer("Charles", "charles");
+        Customer userCharles = new Customer("charles", "charles");
         userCharles.addAccount(new BankAccount("Charles' account"));
         userCharles.addAccount(new BankAccount("Charles' savings account"));
         userCharles.getAccounts().get(0).deposit(40);
@@ -65,7 +66,8 @@ public class MainMenu {
         System.out.println("8. Change password");
         System.out.println("9. Show Accounts");
         System.out.println("10. Change account name");
-        System.out.println("11. Exit the app");
+        System.out.println("11. Print bank statement");
+        System.out.println("12. Exit the app");
         System.out.println();
     }
 
@@ -132,6 +134,10 @@ public class MainMenu {
               break;
             
             case 11:
+                performGenerateBankStatement();
+                break;
+            
+            case 12:
                 System.out.println("Thank you for using the 237 Bank App!");
                 System.exit(0);
                 break;
@@ -177,7 +183,7 @@ public class MainMenu {
         double depositAmount = -1;
         while (depositAmount < 0) {
             System.out.print("How much would you like to deposit: ");
-            depositAmount = keyboardInput.nextInt();
+            depositAmount = keyboardInput.nextDouble();
         }
 
         int account = selectAccount();
@@ -247,7 +253,7 @@ public class MainMenu {
         double withdrawAmount = -1;
         while (withdrawAmount <= 0 || withdrawAmount > selectedAccount.getBalance()) {
             System.out.print("How much would you like to withdraw: ");
-            withdrawAmount = keyboardInput.nextInt();
+            withdrawAmount = keyboardInput.nextDouble();
         }
         String category = selectCategory();
         users.get(currentUserIndex).getAccounts().get(account).withdraw(withdrawAmount, category); // withdraw it from the selected account only for now
@@ -262,7 +268,7 @@ public class MainMenu {
         double transferAmount = -1;
         while (transferAmount < 0 || transferAmount > users.get(currentUserIndex).getAccounts().get(0).getBalance()) {
             System.out.print("How much would you like to transfer: ");
-            transferAmount = keyboardInput.nextInt();
+            transferAmount = keyboardInput.nextDouble();
         }
 
         // make them select an account to transfer to 
@@ -484,6 +490,15 @@ public class MainMenu {
         }
         users.get(currentUserIndex).addCategory(newCategory);
         return newCategory;
+    }
+
+    public void performGenerateBankStatement() {
+        int account = selectAccount();
+        BankAccount selectedAccount = users.get(currentUserIndex).getAccounts().get(account);
+        // send the bank account owner's name to the method 
+        Path statementPath = selectedAccount.generateBankStatement(users.get(currentUserIndex).getUsername());
+        System.out.println("Bank statement generated at: " + statementPath);
+        System.out.println();
     }
 
     public static void main(String[] args) {
