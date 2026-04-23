@@ -304,7 +304,7 @@ public class MainMenu {
     private void printLimitExceededMessage(BankAccount account, Customer customer, String category) {
         Double limit = customer.getCategoryLimit(category);
         double alreadySpent = account.getCategorySpending(category);
-        double remaining = limit - alreadySpent;
+        double remaining = Math.max(0,limit - alreadySpent);
         System.out.println("Withdrawal blocked! Your spending limit for category \"" + category + "\" is $" + limit);
         System.out.println("You spent $" + alreadySpent + " and have $" + remaining + " remaining for this category.\n");
     }

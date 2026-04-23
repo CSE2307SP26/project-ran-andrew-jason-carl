@@ -362,6 +362,4 @@ public class BankAccount {
         sorted.sort((a,b) -> Double.compare(parseTransactionAmount(b), parseTransactionAmount(a)));
         return sorted.subList(0, Math.min(5, sorted.size()));
     }
-    
-
 }
