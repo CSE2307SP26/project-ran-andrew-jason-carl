@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.HashMap;
@@ -24,6 +25,8 @@ public class BankAccount {
     private Map<String, Double> categorySpending = new HashMap<>();
     private AccountType accountType;
     private int savingsWithdrawalCount = 0;
+
+    private static final DateTimeFormatter TX_TIMESTAMP_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public static final double DEFAULT_INTEREST_RATE = 0.05;
     private static final double MIN_SAVINGS_BALANCE = 1000;
@@ -133,7 +136,8 @@ public class BankAccount {
         }
         if (amount > 0) {
             this.balance += amount;
-            this.transactionHistory.add("Deposit: " + amount + " | Category: " + category);
+            String date = LocalDate.now().format(TX_TIMESTAMP_FMT);
+            this.transactionHistory.add(date + " | Deposit: " + amount + " | Category: " + category);
         } else {
             throw new IllegalArgumentException();
         }
@@ -246,7 +250,8 @@ public class BankAccount {
 
         this.balance -= amount;
         categorySpending.merge(category,amount,Double::sum);
-        this.transactionHistory.add("Withdrawal: " + amount + " | Category: " + category);
+        String date = LocalDate.now().format(TX_TIMESTAMP_FMT);
+        this.transactionHistory.add(date + " | Withdrawal: " + amount + " | Category: " + category);
         return true;
     }
 
@@ -345,13 +350,41 @@ public class BankAccount {
     }
 
     private double parseTransactionAmount(String transaction) {
-        try{
-            String[] parts = transaction.split(":");
-            String amountPart = parts[1].split(" ")[0];
-            return Double.parseDouble(amountPart);
+        try {
+            // format: "yyyy-MM-dd | Type: amount | Category: X"
+            // split on "| " to get the middle segment e.g. "Withdrawal: 50.0"
+            String[] pipeParts = transaction.split(" \\| ");
+            for (String part : pipeParts) {
+                if (part.contains(":")) {
+                    String afterColon = part.split(":")[1].trim();
+                    // afterColon might be "50.0" or "50.0 " — take first token
+                    String amountStr = afterColon.split(" ")[0].trim();
+                    return Double.parseDouble(amountStr);
+                }
+            }
+            return 0;
         } catch (Exception e) {
             return 0;
         }
+    }
+
+    public Map<String, Double> getSpendingSummary(LocalDate from, LocalDate to) {
+        Map<String, Double> summary = new HashMap<>();
+        for (String transaction : transactionHistory) {
+            // only count withdrawals (spending)
+            if (!transaction.contains("Withdrawal:")) continue;
+            try {
+                String datePart = transaction.split(" \\| ")[0];
+                LocalDate txDate = LocalDate.parse(datePart, TX_TIMESTAMP_FMT);
+                if (txDate.isBefore(from) || txDate.isAfter(to)) continue;
+                String categoryPart = transaction.split("Category: ")[1];
+                double amount = parseTransactionAmount(transaction);
+                summary.merge(categoryPart, amount, Double::sum);
+            } catch (Exception e) {
+                // skip malformed entries
+            }
+        }
+        return summary;
     }
 
     public List<String> getTopFiveTransactions(){

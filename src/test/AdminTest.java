@@ -13,8 +13,10 @@ import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class AdminTest {
 
@@ -237,6 +239,40 @@ public class AdminTest {
  
         assertDoesNotThrow(() -> admin.viewAllAccounts(users));
         assertTrue(frozenAcc.isFrozen());
+    }
+
+
+    // audit log test
+    @Test
+    public void testAuditLogEmptyOnInit() {
+        assertTrue(admin.getAuditLog().isEmpty());
+    }
+ 
+    @Test
+    public void testFreezeAndUnfreezeAddToAuditLog() {
+        admin.freezeAccount(account);
+        admin.unfreezeAccount(account);
+        List<String> log = admin.getAuditLog();
+        assertEquals(2, log.size());
+        assertTrue(log.get(0).contains("FREEZE"));
+        assertTrue(log.get(1).contains("UNFREEZE"));
+    }
+ 
+    @Test
+    public void testAuditLogContainsAccountNameAndTimestamp() {
+        admin.freezeAccount(account);
+        String entry = admin.getAuditLog().get(0);
+        assertTrue(entry.contains("Test Account"));
+        assertTrue(entry.startsWith("["));
+    }
+ 
+    @Test
+    public void testNoLogWhenFreezeOrUnfreezeIsInvalid() {
+        admin.freezeAccount(account);
+        admin.freezeAccount(account);   // already frozen, should not log
+        admin.unfreezeAccount(account);
+        admin.unfreezeAccount(account); // already unfrozen, should not log
+        assertEquals(2, admin.getAuditLog().size());
     }
 
 

@@ -1,16 +1,18 @@
 package main;
 
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class MainMenu {
 
-    private static final int EXIT_SELECTION = 15;
-    private static final int MAX_SELECTION = 15;
+    private static final int EXIT_SELECTION = 16;
+    private static final int MAX_SELECTION = 16;
     private static final int ACCOUNT_OPTIONS_MAX_SELECTION = 4;  // added admin login option
-    private static final int ADMIN_OPTIONS_MAX_SELECTION = 5;
+    private static final int ADMIN_OPTIONS_MAX_SELECTION = 7;
 
     private ArrayList<Customer> users = new ArrayList<>();
     private int currentUserIndex = -1;
@@ -70,7 +72,8 @@ public class MainMenu {
         System.out.println("12. Set category spending limit");
         System.out.println("13. View the largest transactions");
         System.out.println("14. Mark favorite or primary account");
-        System.out.println("15. Exit the app");
+        System.out.println("15. View spending summary by category");
+        System.out.println("16. Exit the app");
         System.out.println();
     }
 
@@ -153,6 +156,10 @@ public class MainMenu {
                 break;
 
             case 15:
+                performViewSpendingSummary();
+                break;
+
+            case 16:
                 System.out.println("Thank you for using the 237 Bank App!");
                 System.exit(0);
                 break;
@@ -466,7 +473,8 @@ public class MainMenu {
         System.out.println("3. Unfreeze an account");
         System.out.println("4. Add interest to an account");
         System.out.println("5. Collect fee from an account");
-        System.out.println("6. Logout");
+        System.out.println("6. View audit log");
+        System.out.println("7. Logout");
         System.out.println();
     }
 
@@ -488,6 +496,9 @@ public class MainMenu {
                 performAdminCollectFee();
                 break;
             case 6:
+                admin.viewAuditLog();
+                break;
+            case 7:
                 isAdminLoggedIn = false;
                 System.out.println("Admin logged out.\n");
                 break;
@@ -521,6 +532,7 @@ public class MainMenu {
     public void performAdminAddInterest() {
         BankAccount account = selectAnyAccount();
         account.applyInterest();
+        admin.logAdminAction("INTEREST: Applied " + String.format("%.1f", account.getInterestRate() * 100) + "% to account \"" + account.getAccountName() + "\"");
         System.out.printf("Interest applied at rate %.1f%%.%n%n", account.getInterestRate() * 100);
     }
 
@@ -529,6 +541,7 @@ public class MainMenu {
         System.out.print("Enter fee amount: ");
         double fee = keyboardInput.nextDouble();
         account.withdraw(fee);
+        admin.logAdminAction("FEE: Collected $" + fee + " from account \"" + account.getAccountName() + "\"");
         System.out.println("Fee collected.\n");
     }
 
@@ -537,7 +550,7 @@ public class MainMenu {
         while (true) {
             if (isAdminLoggedIn) {
                 displayAdminOptions();
-                selection = getUserSelection(6);
+                selection = getUserSelection(ADMIN_OPTIONS_MAX_SELECTION);
                 processAdminInput(selection);
             } else if (isLoggedIn) {
                 displayOptions();
@@ -618,6 +631,42 @@ public class MainMenu {
         double limit = keyboardInput.nextDouble();
         users.get(currentUserIndex).setCategoryLimit(category, limit);
         System.out.println("Spending limit set for category \"" + category + "\": $" + limit);
+    }
+
+    public void performViewSpendingSummary() {
+        int account = selectAccount();
+        BankAccount selectedAccount = users.get(currentUserIndex).getAccounts().get(account);
+
+        System.out.println("Select time period:");
+        System.out.println("1. Last 7 days");
+        System.out.println("2. Last 30 days");
+        System.out.println("3. Last 90 days");
+        System.out.println("4. All time");
+        int period = getUserSelection(4);
+
+        LocalDate to = LocalDate.now();
+        LocalDate from = switch (period) {
+            case 1 -> to.minusDays(7);
+            case 2 -> to.minusDays(30);
+            case 3 -> to.minusDays(90);
+            default -> LocalDate.of(2000, 1, 1);
+        };
+
+        java.util.Map<String, Double> summary = selectedAccount.getSpendingSummary(from, to);
+
+        if (summary.isEmpty()) {
+            System.out.println("No spending found for this period.\n");
+            return;
+        }
+
+        System.out.println("\n=== Spending Summary ===");
+        double total = 0;
+        for (java.util.Map.Entry<String, Double> entry : summary.entrySet()) {
+            System.out.printf("  %-20s $%.2f%n", entry.getKey() + ":", entry.getValue());
+            total += entry.getValue();
+        }
+        System.out.printf("  %-20s $%.2f%n", "TOTAL:", total);
+        System.out.println("========================\n");
     }
 
     public void performViewLargestTransactions(){
