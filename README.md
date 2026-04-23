@@ -37,17 +37,19 @@
 20. A bank customer should be able to view their largest transactions by category and as a whole.
 21. A bank customer should be able to set a limit per category.
 22. A bank customer should be able to set primary/favorite accounts
-
+23. A bank customer should be able to obtain a bank statement in the form of a txt file
+24. A bank customer should be able to create a savings and checking account
 
 # User stories completed this iteration
 1.  A bank customer will be notify if an account has a low balance (<5.00)
 2.  A bank customer should be able to view their largest transactions by category and as a whole.
 3.  A bank customer should be able to set a limit per category.
 4.  A bank customer should be able to set primary/favorite accounts
+5.  A bank customer should be able to obtain a bank statement in the form of a txt file
+6. A bank customer should be able to create a savings and checking account
 
 # User stories we intend to complete next iteration 
-1. Users will be able to create different types accounts (savings, checking) (carl)
-2. Users should be able obtain a bank statement in the form of a txt file. (carl)
+--
 
 # Is there anything that you implemented but doesn't currently work? 
 None that we know of. 
