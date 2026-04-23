@@ -45,16 +45,17 @@ public class BankAccountTest {
 
     @Test
     public void testTransactionHistory() {
+        String d = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         BankAccount testAccount = new BankAccount();
         testAccount.deposit(50);
         testAccount.deposit(25);
-        assertEquals("Deposit: 50.0 | Category: No category\nDeposit: 25.0 | Category: No category\n",
+        assertEquals(d + " | Deposit: 50.0 | Category: No category\n" + d + " | Deposit: 25.0 | Category: No category\n",
                 testAccount.getTransactionHistory());
 
         BankAccount account3 = new BankAccount();
         account3.deposit(100);
         account3.deposit(200);
-        assertEquals("Deposit: 100.0 | Category: No category\nDeposit: 200.0 | Category: No category\n",
+        assertEquals(d + " | Deposit: 100.0 | Category: No category\n" + d + " | Deposit: 200.0 | Category: No category\n",
                 account3.getTransactionHistory());
 
         // test empty account
@@ -246,33 +247,37 @@ public class BankAccountTest {
 
     @Test
     public void testDepositWithNoCategory() {
+        String d = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         BankAccount testAccount = new BankAccount();
         testAccount.deposit(50);
-        assertEquals("Deposit: 50.0 | Category: No category\n", testAccount.getTransactionHistory());
+        assertEquals(d + " | Deposit: 50.0 | Category: No category\n", testAccount.getTransactionHistory());
     }
 
     @Test
     public void testDepositWithCategory() {
+        String d = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         BankAccount testAccount = new BankAccount();
         testAccount.deposit(50, "Food");
-        assertEquals("Deposit: 50.0 | Category: Food\n", testAccount.getTransactionHistory());
+        assertEquals(d + " | Deposit: 50.0 | Category: Food\n", testAccount.getTransactionHistory());
     }
 
     @Test
     public void testWithdrawWithNoCategory() {
+        String d = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         BankAccount testAccount = new BankAccount();
         testAccount.deposit(50);
         testAccount.withdraw(30);
-        assertEquals("Deposit: 50.0 | Category: No category\nWithdrawal: 30.0 | Category: No category\n",
+        assertEquals(d + " | Deposit: 50.0 | Category: No category\n" + d + " | Withdrawal: 30.0 | Category: No category\n",
                 testAccount.getTransactionHistory());
     }
 
     @Test
     public void testWithdrawWithCategory() {
+        String d = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         BankAccount testAccount = new BankAccount();
         testAccount.deposit(50);
         testAccount.withdraw(30, "Entertainment");
-        assertEquals("Deposit: 50.0 | Category: No category\nWithdrawal: 30.0 | Category: Entertainment\n",
+        assertEquals(d + " | Deposit: 50.0 | Category: No category\n" + d + " | Withdrawal: 30.0 | Category: Entertainment\n",
                 testAccount.getTransactionHistory());
     }
 
@@ -398,7 +403,7 @@ public class BankAccountTest {
         expected.append("Account Name: default\n");
         expected.append("Current Balance: 70.0\n");
         expected.append("Transaction History:\n");
-        expected.append("Deposit: 100.0 | Category: Salary\nWithdrawal: 30.0 | Category: Groceries\n");
+        expected.append(formattedDate + " | Deposit: 100.0 | Category: Salary\n" + formattedDate + " | Withdrawal: 30.0 | Category: Groceries\n");
 
         // check file exists
         assert (Files.exists(statementPath));
@@ -432,6 +437,7 @@ public class BankAccountTest {
 
     @Test
     public void testGetTopFiveTransactions(){
+        String d = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         BankAccount account = new BankAccount();
         account.deposit(100, "Food");
         account.deposit(30, "Utilities");
@@ -440,30 +446,70 @@ public class BankAccountTest {
         account.withdraw(5,"Utilities");
         List<String> topTransactions = account.getTopFiveTransactions();
         assertEquals(5, topTransactions.size());
-        assertEquals("Deposit: 100.0 | Category: Food", topTransactions.get(0));
-        assertEquals("Deposit: 30.0 | Category: Utilities", topTransactions.get(1));
-        assertEquals("Deposit: 20.0 | Category: Other", topTransactions.get(2));
+        assertEquals(d + " | Deposit: 100.0 | Category: Food", topTransactions.get(0));
+        assertEquals(d + " | Deposit: 30.0 | Category: Utilities", topTransactions.get(1));
+        assertEquals(d + " | Deposit: 20.0 | Category: Other", topTransactions.get(2));
     }
 
     @Test
     public void testTopTransactionsLessThanFive(){
+        String d = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         BankAccount account = new BankAccount();
         account.deposit(100, "Food");
         account.withdraw(10,"Other");
         List<String> topTransactions = account.getTopFiveTransactions();
         assertEquals(2, topTransactions.size());
-        assertEquals("Deposit: 100.0 | Category: Food", topTransactions.get(0));
-        assertEquals("Withdrawal: 10.0 | Category: Other", topTransactions.get(1));
+        assertEquals(d + " | Deposit: 100.0 | Category: Food", topTransactions.get(0));
+        assertEquals(d + " | Withdrawal: 10.0 | Category: Other", topTransactions.get(1));
     }
 
     @Test
     public void testGetTopFiveTransactionsByCategory(){
+        String d = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         BankAccount account = new BankAccount();
         account.deposit(500);
         account.deposit(100,"Transportation");
         account.withdraw(30, "Food");
-        assertEquals("Withdrawal: 30.0 | Category: Food", account.getLargestTransactionByCategory("Food"));
+        assertEquals(d + " | Withdrawal: 30.0 | Category: Food", account.getLargestTransactionByCategory("Food"));
         assertEquals("There are no transactions in the category: Utilities", account.getLargestTransactionByCategory("Utilities"));
+    }
+
+    @Test
+    public void testSpendingSummaryGroupsByCategory() {
+        BankAccount account = new BankAccount();
+        account.deposit(500);
+        account.withdraw(50, "Food");
+        account.withdraw(30, "Food");
+        account.withdraw(100, "Entertainment");
+        java.util.Map<String, Double> summary = account.getSpendingSummary(LocalDate.now().minusDays(7), LocalDate.now());
+        assertEquals(80.0, summary.get("Food"), 0.01);
+        assertEquals(100.0, summary.get("Entertainment"), 0.01);
+    }
+
+    @Test
+    public void testSpendingSummaryEmptyWhenNoWithdrawals() {
+        BankAccount account = new BankAccount();
+        account.deposit(500);
+        java.util.Map<String, Double> summary = account.getSpendingSummary(LocalDate.now().minusDays(7), LocalDate.now());
+        assertEquals(true, summary.isEmpty());
+    }
+
+    @Test
+    public void testSpendingSummaryExcludesDeposits() {
+        BankAccount account = new BankAccount();
+        account.deposit(500, "Food");
+        java.util.Map<String, Double> summary = account.getSpendingSummary(LocalDate.now().minusDays(7), LocalDate.now());
+        assertEquals(true, summary.isEmpty());
+    }
+
+    @Test
+    public void testSpendingSummaryFutureDateRangeReturnsEmpty() {
+        BankAccount account = new BankAccount();
+        account.deposit(500);
+        account.withdraw(100, "Food");
+        LocalDate future = LocalDate.now().plusDays(10);
+        java.util.Map<String, Double> summary = account.getSpendingSummary(future, future.plusDays(30));
+        assertEquals(true, summary.isEmpty());
     }
 
 
